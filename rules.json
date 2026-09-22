@@ -30,7 +30,13 @@
         }
       ],
       "schedule": {
-        "days": ["MON", "TUE", "WED", "THU", "FRI"],
+        "days": [
+          "MON",
+          "TUE",
+          "WED",
+          "THU",
+          "FRI"
+        ],
         "from": "07:30",
         "to": "19:30",
         "excludeHolidays": true,
@@ -64,7 +70,11 @@
           "source": "https://www.comune.milano.it/documents/d/guest/determina-dirigenziale-n-1856-del-13-03-2026-pdf"
         }
       ],
-      "reminders": ["onTransit", "evening", "lastCall"],
+      "reminders": [
+        "onTransit",
+        "evening",
+        "lastCall"
+      ],
       "payUrl": "https://areac.atm-mi.it/Areac/IWeb/Acquisto.aspx",
       "accountUrl": "https://areac.atm-mi.it/Areac/IWeb/MyAreaC_HomePage.aspx",
       "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c",
@@ -74,18 +84,51 @@
         "source": "https://www.comune.milano.it/documents/d/guest/determina-dirigenziale-n-1856-del-13-03-2026-pdf",
         "note": "Capitolo 6 del Disciplinare. Solo le voci automatiche sono utili all'onboarding: le altre categorie richiedono comunicazione della targa al Comune.",
         "automatic": [
-          { "id": "electric", "label": "Veicolo elettrico" },
-          { "id": "hybridLowCo2", "label": "Auto ibrida (M1) con CO2 ≤ 100 g/km" },
-          { "id": "motorcycle", "label": "Moto, ciclomotore o velocipede" }
+          {
+            "id": "electric",
+            "label": "Veicolo elettrico"
+          },
+          {
+            "id": "hybridLowCo2",
+            "label": "Auto ibrida (M1) con CO2 ≤ 100 g/km"
+          },
+          {
+            "id": "motorcycle",
+            "label": "Moto, ciclomotore o velocipede"
+          }
         ],
         "requiresPlateRegistration": [
-          { "id": "disabledPass", "label": "Contrassegno disabili con titolare a bordo" },
-          { "id": "emergency", "label": "Forze dell'ordine, sanità, protezione civile" }
+          {
+            "id": "disabledPass",
+            "label": "Contrassegno disabili con titolare a bordo"
+          },
+          {
+            "id": "emergency",
+            "label": "Forze dell'ordine, sanità, protezione civile"
+          }
         ],
         "reducedFare": [
-          { "id": "resident", "label": "Residente o equiparato in Area C", "amountEur": 3.0, "note": "50 ingressi gratuiti l'anno, poi 3 € dal 51°. Richiede registrazione a MyAreaC." },
-          { "id": "serviceVehicle", "label": "Veicolo di servizio", "amountEur": 4.5 },
-          { "id": "garage", "label": "Sosta in autorimessa convenzionata in Area C", "amountEur": 4.5, "deadlineOverride": { "rule": "endOfDay", "offsetDays": 0 }, "note": "Va attivato entro le 24.00 del giorno stesso dell'ingresso, non del giorno dopo." }
+          {
+            "id": "resident",
+            "label": "Residente o equiparato in Area C",
+            "amountEur": 3.0,
+            "note": "50 ingressi gratuiti l'anno, poi 3 € dal 51°. Richiede registrazione a MyAreaC."
+          },
+          {
+            "id": "serviceVehicle",
+            "label": "Veicolo di servizio",
+            "amountEur": 4.5
+          },
+          {
+            "id": "garage",
+            "label": "Sosta in autorimessa convenzionata in Area C",
+            "amountEur": 4.5,
+            "deadlineOverride": {
+              "rule": "endOfDay",
+              "offsetDays": 0
+            },
+            "note": "Va attivato entro le 24.00 del giorno stesso dell'ingresso, non del giorno dopo."
+          }
         ]
       }
     },
@@ -94,8 +137,71 @@
       "kind": "freeFlow",
       "name": "A36 Pedemontana",
       "operator": "apl",
-      "geometry": { "type": "polyline", "file": "a36.geojson", "toleranceM": 40, "verified": false },
-      "monitorRegions": [],
+      "geometry": {
+        "type": "polyline",
+        "file": "a36.geojson",
+        "toleranceM": 40,
+        "minConsecutivePoints": 5,
+        "minSpeedKmh": 50,
+        "maxBearingDeltaDeg": 30,
+        "minProgressM": 2000,
+        "ambiguousMinProgressM": 3000,
+        "ambiguousMinSpeedKmh": 80,
+        "requiresInVehicle": true,
+        "note": "Transito se almeno una fra: minConsecutivePoints punti consecutivi entro toleranceM con velocità sopra minSpeedKmh e giacitura allineata entro maxBearingDeltaDeg; oppure avanzamento oltre minProgressM. L'avanzamento è il progresso della proiezione sulla polilinea (max s - min s), non la lunghezza del percorso GPS: un veicolo fermo con rumore GPS non deve accumulare metri. L'allineamento è non orientato, modulo 180°, perché una carreggiata doppia è due way OSM con verso opposto. Sulle feature con ambiguous=true valgono ambiguousMinProgressM e ambiguousMinSpeedKmh.",
+        "verified": true,
+        "source": "https://www.openstreetmap.org/ — estrazione in tools/build_freeflow.py"
+      },
+      "monitorRegions": [
+        {
+          "lat": 45.64598,
+          "lon": 8.839882,
+          "radiusM": 2882,
+          "verified": true
+        },
+        {
+          "lat": 45.655195,
+          "lon": 8.870467,
+          "radiusM": 2935,
+          "verified": true
+        },
+        {
+          "lat": 45.656455,
+          "lon": 8.902117,
+          "radiusM": 2944,
+          "verified": true
+        },
+        {
+          "lat": 45.661823,
+          "lon": 8.932657,
+          "radiusM": 2944,
+          "verified": true
+        },
+        {
+          "lat": 45.66399,
+          "lon": 8.964099,
+          "radiusM": 2903,
+          "verified": true
+        },
+        {
+          "lat": 45.676761,
+          "lon": 8.990804,
+          "radiusM": 2945,
+          "verified": true
+        },
+        {
+          "lat": 45.678011,
+          "lon": 9.023744,
+          "radiusM": 2902,
+          "verified": true
+        },
+        {
+          "lat": 45.678655,
+          "lon": 9.058517,
+          "radiusM": 2935,
+          "verified": true
+        }
+      ],
       "schedule": null,
       "suspensions": null,
       "deadlines": [
@@ -109,7 +215,11 @@
           "source": "https://apl.pedemontana.com/termini-di-pagamento"
         }
       ],
-      "reminders": ["onTransit", "dayBefore", "lastCall"],
+      "reminders": [
+        "onTransit",
+        "dayBefore",
+        "lastCall"
+      ],
       "payUrl": "https://apl.pedemontana.com/jax-web/jawBridge/home.jsf",
       "tollCalculatorUrl": "https://apl.pedemontana.com/calcola-il-pedaggio",
       "source": "https://www.pedemontana.com/it/pedaggio-e-assistenza/faq/free-flow-pagamento-pedaggio",
@@ -128,8 +238,35 @@
       "kind": "freeFlow",
       "name": "A59 Tangenziale di Como",
       "operator": "apl",
-      "geometry": { "type": "polyline", "file": "a59.geojson", "toleranceM": 40, "verified": false },
-      "monitorRegions": [],
+      "geometry": {
+        "type": "polyline",
+        "file": "a59.geojson",
+        "toleranceM": 40,
+        "minConsecutivePoints": 5,
+        "minSpeedKmh": 50,
+        "maxBearingDeltaDeg": 30,
+        "minProgressM": 2000,
+        "ambiguousMinProgressM": 3000,
+        "ambiguousMinSpeedKmh": 80,
+        "requiresInVehicle": true,
+        "note": "Transito se almeno una fra: minConsecutivePoints punti consecutivi entro toleranceM con velocità sopra minSpeedKmh e giacitura allineata entro maxBearingDeltaDeg; oppure avanzamento oltre minProgressM. L'avanzamento è il progresso della proiezione sulla polilinea (max s - min s), non la lunghezza del percorso GPS: un veicolo fermo con rumore GPS non deve accumulare metri. L'allineamento è non orientato, modulo 180°, perché una carreggiata doppia è due way OSM con verso opposto. Sulle feature con ambiguous=true valgono ambiguousMinProgressM e ambiguousMinSpeedKmh.",
+        "verified": true,
+        "source": "https://www.openstreetmap.org/ — estrazione in tools/build_freeflow.py"
+      },
+      "monitorRegions": [
+        {
+          "lat": 45.772426,
+          "lon": 9.073744,
+          "radiusM": 2899,
+          "verified": true
+        },
+        {
+          "lat": 45.770031,
+          "lon": 9.041665,
+          "radiusM": 2929,
+          "verified": true
+        }
+      ],
       "schedule": null,
       "suspensions": null,
       "deadlines": [
@@ -142,7 +279,11 @@
           "source": "https://apl.pedemontana.com/termini-di-pagamento"
         }
       ],
-      "reminders": ["onTransit", "dayBefore", "lastCall"],
+      "reminders": [
+        "onTransit",
+        "dayBefore",
+        "lastCall"
+      ],
       "payUrl": "https://apl.pedemontana.com/jax-web/jawBridge/home.jsf",
       "tollCalculatorUrl": "https://apl.pedemontana.com/calcola-il-pedaggio",
       "source": "https://www.pedemontana.com/it/la-rete-esercizio/a59-tangenziale-di-como",
@@ -153,8 +294,35 @@
       "kind": "freeFlow",
       "name": "A60 Tangenziale di Varese",
       "operator": "apl",
-      "geometry": { "type": "polyline", "file": "a60.geojson", "toleranceM": 40, "verified": false },
-      "monitorRegions": [],
+      "geometry": {
+        "type": "polyline",
+        "file": "a60.geojson",
+        "toleranceM": 40,
+        "minConsecutivePoints": 5,
+        "minSpeedKmh": 50,
+        "maxBearingDeltaDeg": 30,
+        "minProgressM": 2000,
+        "ambiguousMinProgressM": 3000,
+        "ambiguousMinSpeedKmh": 80,
+        "requiresInVehicle": true,
+        "note": "Transito se almeno una fra: minConsecutivePoints punti consecutivi entro toleranceM con velocità sopra minSpeedKmh e giacitura allineata entro maxBearingDeltaDeg; oppure avanzamento oltre minProgressM. L'avanzamento è il progresso della proiezione sulla polilinea (max s - min s), non la lunghezza del percorso GPS: un veicolo fermo con rumore GPS non deve accumulare metri. L'allineamento è non orientato, modulo 180°, perché una carreggiata doppia è due way OSM con verso opposto. Sulle feature con ambiguous=true valgono ambiguousMinProgressM e ambiguousMinSpeedKmh.",
+        "verified": true,
+        "source": "https://www.openstreetmap.org/ — estrazione in tools/build_freeflow.py"
+      },
+      "monitorRegions": [
+        {
+          "lat": 45.770917,
+          "lon": 8.81963,
+          "radiusM": 2277,
+          "verified": true
+        },
+        {
+          "lat": 45.772005,
+          "lon": 8.851804,
+          "radiusM": 2894,
+          "verified": true
+        }
+      ],
       "schedule": null,
       "suspensions": null,
       "deadlines": [
@@ -167,7 +335,11 @@
           "source": "https://apl.pedemontana.com/termini-di-pagamento"
         }
       ],
-      "reminders": ["onTransit", "dayBefore", "lastCall"],
+      "reminders": [
+        "onTransit",
+        "dayBefore",
+        "lastCall"
+      ],
       "payUrl": "https://apl.pedemontana.com/jax-web/jawBridge/home.jsf",
       "tollCalculatorUrl": "https://apl.pedemontana.com/calcola-il-pedaggio",
       "source": "https://www.pedemontana.com/it/la-rete-esercizio/a60-tangenziale-di-varese",
@@ -195,23 +367,74 @@
     "note": "Le fonti ufficiali di Area C dicono solo \"festivi esclusi\" senza elencare i giorni. Questo elenco è ricostruito dalle festività civili italiane (L. 260/1963) più il patrono di Milano (Sant'Ambrogio, 7 dicembre). Non confermato da fonte Area C: rischio accettato in M0, perché un festivo mancante produce al più un promemoria superfluo. Correggibile senza pubblicare una nuova versione dell'app tramite l'aggiornamento remoto di questo file.",
     "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c",
     "dates": [
-      { "date": "2026-11-01", "name": "Ognissanti" },
-      { "date": "2026-12-07", "name": "Sant'Ambrogio" },
-      { "date": "2026-12-08", "name": "Immacolata Concezione" },
-      { "date": "2026-12-25", "name": "Natale" },
-      { "date": "2026-12-26", "name": "Santo Stefano" },
-      { "date": "2027-01-01", "name": "Capodanno" },
-      { "date": "2027-01-06", "name": "Epifania" },
-      { "date": "2027-03-29", "name": "Lunedì dell'Angelo" },
-      { "date": "2027-04-25", "name": "Festa della Liberazione" },
-      { "date": "2027-05-01", "name": "Festa del Lavoro" },
-      { "date": "2027-06-02", "name": "Festa della Repubblica" },
-      { "date": "2027-08-15", "name": "Ferragosto" },
-      { "date": "2027-11-01", "name": "Ognissanti" },
-      { "date": "2027-12-07", "name": "Sant'Ambrogio" },
-      { "date": "2027-12-08", "name": "Immacolata Concezione" },
-      { "date": "2027-12-25", "name": "Natale" },
-      { "date": "2027-12-26", "name": "Santo Stefano" }
+      {
+        "date": "2026-11-01",
+        "name": "Ognissanti"
+      },
+      {
+        "date": "2026-12-07",
+        "name": "Sant'Ambrogio"
+      },
+      {
+        "date": "2026-12-08",
+        "name": "Immacolata Concezione"
+      },
+      {
+        "date": "2026-12-25",
+        "name": "Natale"
+      },
+      {
+        "date": "2026-12-26",
+        "name": "Santo Stefano"
+      },
+      {
+        "date": "2027-01-01",
+        "name": "Capodanno"
+      },
+      {
+        "date": "2027-01-06",
+        "name": "Epifania"
+      },
+      {
+        "date": "2027-03-29",
+        "name": "Lunedì dell'Angelo"
+      },
+      {
+        "date": "2027-04-25",
+        "name": "Festa della Liberazione"
+      },
+      {
+        "date": "2027-05-01",
+        "name": "Festa del Lavoro"
+      },
+      {
+        "date": "2027-06-02",
+        "name": "Festa della Repubblica"
+      },
+      {
+        "date": "2027-08-15",
+        "name": "Ferragosto"
+      },
+      {
+        "date": "2027-11-01",
+        "name": "Ognissanti"
+      },
+      {
+        "date": "2027-12-07",
+        "name": "Sant'Ambrogio"
+      },
+      {
+        "date": "2027-12-08",
+        "name": "Immacolata Concezione"
+      },
+      {
+        "date": "2027-12-25",
+        "name": "Natale"
+      },
+      {
+        "date": "2027-12-26",
+        "name": "Santo Stefano"
+      }
     ]
   }
 }

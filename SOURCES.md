@@ -343,6 +343,91 @@ Da valutare una riga esplicita nella schermata Info in M3.
 
 ---
 
+## Tracciati A36 / A59 / A60 (`verified: true`)
+
+Estratti da **OpenStreetMap** via Overpass il **2026-09-23**, licenza **ODbL 1.0**.
+Rigenerabili con `python3 tools/build_freeflow.py`.
+
+Query, una per strada, bbox `45.55, 8.60 → 45.95, 9.35`:
+
+```
+way["highway"="motorway"]["ref"~"^A ?36$"](bbox); out geom;
+```
+
+`highway=motorway` **esatto** è una whitelist: esclude per costruzione `motorway_link` (rampe e svincoli),
+`construction`, `proposed` e `trunk`. Verificato a valle che non resti alcuna way con `construction:ref`
+o `proposed:ref`.
+
+| Strada | Way | Catene | Lunghezza way | Nome OSM |
+|---|---|---|---|---|
+| A36 | 53 | 2 | 41,1 km | Autostrada Pedemontana Lombarda |
+| A59 | 41 | 2 | 5,4 km | Tangenziale di Como |
+| A60 | 16 | 2 | 8,9 km | Tangenziale Sud di Varese |
+
+Le way tagliate portano `toll=yes`, coerente col free flow.
+
+### Perché le lunghezze sembrano piccole
+
+A prima vista A59 con 5,4 km e A60 con 8,9 km sembrano tronche rispetto alle tangenziali "da mappa".
+Non lo sono: la lunghezza in tabella è la **somma delle carreggiate**, quindi il tracciato è circa la metà —
+A36 ≈ 20,5 km, A59 ≈ 2,7 km, A60 ≈ 4,5 km. Corrisponde ai **soli lotti in esercizio** di Pedemontana
+(A36 Tratta A + B1, e i primi tratti delle due tangenziali), che è esattamente ciò che va tariffato oggi.
+
+⚠️ Il riscontro è per coerenza interna, non su una tabella chilometrica ufficiale di Pedemontana: quella
+pagina non è stata raggiunta. Se un lotto nuovo apre, il tracciato va rigenerato.
+
+### Tratti ambigui: nessuno
+
+Cercata la viabilità ordinaria (`trunk|primary|secondary|tertiary|unclassified|residential|living_street|service`)
+entro 40 m dall'autostrada **e allineata** entro 30°:
+
+| Strada | Segmenti ordinari vicini | Tratto parallelo contiguo più lungo | Catene ambigue |
+|---|---|---|---|
+| A36 | 836 | 575 m | 0 |
+| A59 | 324 | 461 m | 0 |
+| A60 | 353 | 313 m | 0 |
+
+Una catena è marcata `ambiguous` solo se il tratto parallelo contiguo supera `minProgressM` (2000 m): sotto
+quella soglia un falso positivo non può nascere, perché la strada parallela non è abbastanza lunga da
+accumulare l'avanzamento richiesto. **Nessuna catena reale supera la soglia.**
+
+Il ramo `ambiguous` resta quindi non esercitato dai dati veri: è coperto da quattro casi sintetici nei test,
+altrimenti sarebbe codice non provato.
+
+### monitorRegions
+
+Copertura golosa con ricerca binaria sul raggio, per trovare il più piccolo che stia nel budget:
+**12 cerchi** per le tre autostrade, raggio massimo **2945 m** (margine 500 m incluso).
+Con Area C fanno **13 su 20** di `CLMonitor`, ne restano 7.
+
+Ripartizione: A36 8, A59 2, A60 2. Sono cerchi ampi, che si accendono in mezza Brianza: il contenimento
+non è geometrico ma comportamentale, perché l'ingresso in regione non avvia il tracciamento fine, lo avvia
+la conferma `CMMotionActivity` "in auto" (`requiresInVehicle: true`).
+
+### Verifiche
+
+21 controlli in `tools/build_freeflow.py`. Se uno fallisce non scrive nulla.
+
+**Negativi — zero transiti:** filtro in-auto spento; cavalcavia perpendicolare a 50 km/h; strada parallela
+a 60 m e a 45 m; veicolo fermo con rumore GPS per 20 minuti.
+
+**Positivi:** A36 a 110 km/h; **A36 in coda a 20 km/h** (via avanzamento, 7989 m); A36 con rumore GPS 25 m;
+A59 percorsa per intero.
+
+**Soglie rinforzate:** ambiguo a 60 km/h con 2500 m → probabile; a 110 km/h → confermato; con 4500 m →
+confermato; tratto breve → nessuno.
+
+Due test contengono un controllo del proprio presupposto, perché senza passerebbero per la ragione sbagliata:
+
+- il cavalcavia verifica di essere **davvero perpendicolare** (delta 90,0°) e di **attraversare davvero** la
+  carreggiata. Alla prima stesura il vettore di moto era sbagliato e produceva una traccia *parallela*: il
+  test falliva segnalando "allineato", che era corretto — era il test a essere sbagliato, non l'algoritmo;
+- la strada parallela verifica di essere **fuori tolleranza da tutta la rete** prima di pretendere zero
+  transiti. Con carreggiata doppia, spostarsi di 45 m dal verso sbagliato finisce sull'altra carreggiata,
+  a meno di 40 m, e il test non proverebbe nulla.
+
+---
+
 ## Nota metodologica
 
 `comune.milano.it` risponde **403** a richieste senza User-Agent da browser. Serve `curl -sSL -A "Mozilla/5.0 ..."`.
