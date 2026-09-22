@@ -204,21 +204,40 @@ Il valore è una stima prudente da tarare sulla prova su strada di M2, non un da
 
 ### Verifiche eseguite
 
-Riproducibili con `rules/build_areac.py` (solo libreria standard, nessuna dipendenza):
+Riproducibili con `tools/build_areac.py` (solo libreria standard, scarica i dataset e rigenera i GeoJSON).
+Se una verifica fallisce lo script non scrive nulla.
+
+**Negativi — non deve nascere alcun transito:**
 
 | Controllo | Esito |
 |---|---|
 | Poligono chiuso, anello singolo, nessun buco | 1120 vertici |
 | Varchi estratti | 42 punti |
 | Tutti i varchi entro 40 m dal confine | max 39,5 m, mediana 14,1 m |
-| Duomo `DENTRO` | ok |
-| Stazione Centrale `FUORI` | ok |
-| Percorso lungo i Bastioni: sfiora ≥ 3 varchi | 8 varchi |
-| Percorso lungo i Bastioni: zero stati `DENTRO` | 0 su 260 punti |
-| Idem con errore GPS 10–25 m spinto verso l'interno | 0 su 260 punti, profondità max raggiunta 24,9 m |
+| Duomo `DENTRO`, Stazione Centrale `FUORI` | ok |
+| Giro dei Bastioni: sfiora ≥ 3 varchi | **8 varchi** |
+| Giro dei Bastioni | nessun transito |
+| Giro dei Bastioni con GPS 25 m spinto verso l'interno | nessun transito (fermo 4 s) |
+| Sosta a 6 m dal confine per 10 minuti | nessun transito (sotto `probableMinDepthM`) |
+| Passaggio in banda a 30 m senza fermarsi | nessun transito (sotto `probableMinDwellS`) |
 
-L'ultimo è il controllo che conta: è il caso peggiore, con il rumore spinto deliberatamente nella direzione che
-genera falsi positivi. Con buffer a 50 m e rumore fino a 25 m resta un margine di sicurezza di 2×.
+**Positivi — il transito deve nascere:**
+
+| Controllo | Esito |
+|---|---|
+| Ingresso da nord fino al Duomo | **confermato** |
+| Orario interpolato fra ultimo `FUORI` e primo punto dentro | t=104,9 s in [104, 106] |
+| Entra e parcheggia a 30 m dal confine, 5 minuti | **probabile** (31 m, fermo 306 s) |
+| Ingresso reale a 70 m con GPS 25 m verso l'esterno | almeno probabile (letta 50 m contro 75 m reali) |
+
+### Perché `probableMinDwellS` conta il tempo da fermo
+
+Scritto con la definizione ovvia — tempo totale trascorso dentro il poligono — **il test fallisce**. Un percorso
+lungo i Bastioni con errore GPS di 25 m sbilanciato verso l'interno resta in `BANDA` a 25 m, sopra i 15 m di
+`probableMinDepthM`, per oltre 500 s: produrrebbe un "probabile" fasullo a ogni giro di circonvallazione.
+
+Contando invece la permanenza **da fermo** in coda al viaggio (campioni finali entro `stationaryRadiusM` = 25 m
+dall'ultimo) i due casi si separano puliti: chi percorre la Cerchia non si ferma mai (4 s), chi parcheggia sì (306 s).
 
 ### monitorRegion
 
