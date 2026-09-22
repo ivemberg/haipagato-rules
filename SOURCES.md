@@ -155,6 +155,86 @@ Il dominio operativo è `areac.atm-mi.it` (ATM gestisce per conto del Comune), *
 
 ---
 
+## Area C — confine e varchi (`verified: true`)
+
+Consultati il **2026-09-22** sul portale open data del Comune, `dati.comune.milano.it`.
+
+### Perimetro
+
+[`ds51_trafficotrasporti_aree_pedonali_ztl`](https://dati.comune.milano.it/dataset/ds51_trafficotrasporti_aree_pedonali_ztl)
+— "Aree pedonali e ZTL", **CC BY**, aggiornato 08/05/2026.
+
+217 MultiPolygon, dei quali **uno solo** ha `tipo: AREA_C` (`id_amat` 276, `nome` "AreaC", `val_inizio` 2000-01-01,
+`val_fine` 2050-01-01). Un anello, nessun buco, 1120 vertici, CRS84/WGS84.
+Bbox `9.164455, 45.452078` – `9.206617, 45.480865`.
+
+`PLAN.md` ipotizzava di dover ricostruire il confine dai varchi o da OSM e marcarlo `verified: false`.
+**Non serve:** il poligono ufficiale esiste ed è pubblicato. Estratto in `rules/area-c.geojson` con coordinate
+arrotondate a 6 decimali (~0,1 m).
+
+### Varchi
+
+[`ds82_infogeo_varchi_elettronici_localizzazione_`](https://dati.comune.milano.it/dataset/ds82_infogeo_varchi_elettronici_localizzazione_)
+— "Varchi Area C", **CC BY**, aggiornato 16/09/2026. 42 punti con `id_amat` e `label`.
+Estratti in `rules/area-c-varchi.geojson`.
+
+⚠️ **42 varchi nel dataset, 43 secondo la pagina del Comune**
+([KA-01472](https://servizicrm.comune.milano.it/centro-supporto/KA-01472/Confini-e-varchi-di-Area-C):
+«È delimitata da 43 varchi elettronici»). Non risolta e non inventata. Non è bloccante: i varchi non rilevano
+nulla, servono solo al nome della notifica, quindi un varco mancante produce al più una notifica generica.
+
+### I varchi non possono confermare un transito
+
+Misurato: ogni varco dista dal confine **1,6–39,5 m**, mediana **14,1 m**, e 40 su 42 cadono dentro il poligono.
+Le telecamere stanno appena all'interno del perimetro.
+
+Questo li rende inutilizzabili come criterio di rilevamento: **stanno sulla Cerchia dei Bastioni**, cioè sulla
+strada che si percorre senza entrare. Un percorso simulato lungo la circonvallazione ne sfiora **8** senza mai
+entrare in zona. Usarli come conferma significherebbe fabbricare otto transiti inesistenti.
+Da qui `geometry.gatesUse: "labelOnly"` in `rules.json`.
+
+### Banda di isteresi
+
+Il confine coincide con la carreggiata dei Bastioni e l'errore GPS urbano è dello stesso ordine della larghezza
+della strada, quindi un punto-in-poligono nudo genera falsi positivi a ogni giro. `geometry.innerBufferM` vale
+**50 m**: un punto è `DENTRO` solo se supera quella distanza dal bordo. Semantica completa e macchina a stati
+in `PLAN.md`, sezione "Rilevamento del transito".
+
+Il valore è una stima prudente da tarare sulla prova su strada di M2, non un dato di fonte.
+
+### Verifiche eseguite
+
+Riproducibili con `rules/build_areac.py` (solo libreria standard, nessuna dipendenza):
+
+| Controllo | Esito |
+|---|---|
+| Poligono chiuso, anello singolo, nessun buco | 1120 vertici |
+| Varchi estratti | 42 punti |
+| Tutti i varchi entro 40 m dal confine | max 39,5 m, mediana 14,1 m |
+| Duomo `DENTRO` | ok |
+| Stazione Centrale `FUORI` | ok |
+| Percorso lungo i Bastioni: sfiora ≥ 3 varchi | 8 varchi |
+| Percorso lungo i Bastioni: zero stati `DENTRO` | 0 su 260 punti |
+| Idem con errore GPS 10–25 m spinto verso l'interno | 0 su 260 punti, profondità max raggiunta 24,9 m |
+
+L'ultimo è il controllo che conta: è il caso peggiore, con il rumore spinto deliberatamente nella direzione che
+genera falsi positivi. Con buffer a 50 m e rumore fino a 25 m resta un margine di sicurezza di 2×.
+
+### monitorRegion
+
+Un solo cerchio: centro `45.466471, 9.185536`, raggio **2789 m** — cerchio circoscritto al bbox del poligono
+più 500 m di margine. Entro il limite di 20 regioni di `CLMonitor` con ampio spazio per le free flow.
+
+### Licenza e attribuzione
+
+Entrambi i dataset sono **CC BY**. `rules/` viene ridistribuito su GitHub Pages, quindi l'attribuzione è
+obbligatoria in due punti: nei file (campo `attribution` in testa a ogni GeoJSON) e nella schermata Info
+dell'app, accanto a quella OpenStreetMap. Formula usata:
+
+> Contiene dati del Comune di Milano — dati.comune.milano.it, licenza CC BY 4.0
+
+---
+
 ## Free flow Pedemontana — A36, A59, A60 (`verified: true`)
 
 Consultate il **2026-09-22**. Il sito ufficiale del concessionario è `pedemontana.com`

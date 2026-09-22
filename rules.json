@@ -7,8 +7,25 @@
       "kind": "congestion",
       "name": "Area C",
       "operator": "comune-milano",
-      "geometry": { "type": "polygon", "file": "area-c.geojson", "verified": false },
-      "monitorRegions": [{ "lat": 45.4642, "lon": 9.19, "radiusM": 2200, "verified": false }],
+      "geometry": {
+        "type": "polygon",
+        "file": "area-c.geojson",
+        "innerBufferM": 50,
+        "gatesFile": "area-c-varchi.geojson",
+        "gatesUse": "labelOnly",
+        "note": "innerBufferM è la banda di isteresi lungo il confine: il confine coincide con la carreggiata della Cerchia dei Bastioni, quindi un punto conta come DENTRO solo se dista più di 50 m dal bordo. I varchi servono solo a dare un nome alla notifica, mai a rilevare o confermare un transito: stanno sulla Cerchia e un percorso lungo la circonvallazione ne sfiora 8 senza entrare.",
+        "verified": true,
+        "source": "https://dati.comune.milano.it/dataset/ds51_trafficotrasporti_aree_pedonali_ztl"
+      },
+      "monitorRegions": [
+        {
+          "lat": 45.466471,
+          "lon": 9.185536,
+          "radiusM": 2789,
+          "note": "Cerchio circoscritto al bbox del poligono più 500 m di margine.",
+          "verified": true
+        }
+      ],
       "schedule": {
         "days": ["MON", "TUE", "WED", "THU", "FRI"],
         "from": "07:30",
