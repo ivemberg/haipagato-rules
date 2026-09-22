@@ -19,7 +19,7 @@
       },
       "suspensions": {
         "verified": false,
-        "note": "Periodi di sospensione continuativa della zona, decisi anno per anno con ordinanza comunale (tipicamente due settimane in agosto). Nessuna conferma ufficiale trovata in M0: l'elenco resta vuoto. Vuoto significa nessuna sospensione, quindi l'app continua a ricordare il pagamento: un promemoria di troppo infastidisce, uno in meno costa una multa. Da chiudere via Albo Pretorio o MTA.UfficioAreaC@comune.milano.it.",
+        "note": "Periodi di sospensione continuativa della zona, decisi anno per anno con ordinanza comunale (tipicamente due settimane in agosto). Nessuna conferma ufficiale trovata in M0: l'elenco resta vuoto ed è un rischio accettato. Vuoto significa nessuna sospensione, quindi l'app continua a ricordare il pagamento: un promemoria di troppo infastidisce, uno in meno costa una multa.",
         "source": null,
         "periods": []
       },
@@ -172,7 +172,7 @@
   ],
   "holidays": {
     "verified": false,
-    "note": "Le fonti ufficiali di Area C dicono solo \"festivi esclusi\" senza elencare i giorni. Questo elenco è ricostruito dalle festività civili italiane (L. 260/1963) più il patrono di Milano (Sant'Ambrogio, 7 dicembre). Non confermato da fonte Area C. Manca inoltre la conferma sull'eventuale sospensione estiva di agosto, decisa anno per anno con ordinanza.",
+    "note": "Le fonti ufficiali di Area C dicono solo \"festivi esclusi\" senza elencare i giorni. Questo elenco è ricostruito dalle festività civili italiane (L. 260/1963) più il patrono di Milano (Sant'Ambrogio, 7 dicembre). Non confermato da fonte Area C: rischio accettato in M0, perché un festivo mancante produce al più un promemoria superfluo. Correggibile senza pubblicare una nuova versione dell'app tramite l'aggiornamento remoto di questo file.",
     "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c",
     "dates": [
       { "date": "2026-11-01", "name": "Ognissanti" },

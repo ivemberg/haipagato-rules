@@ -63,8 +63,9 @@ Fonti secondarie riferiscono che Area C viene sospesa per un periodo continuativ
 deciso anno per anno con ordinanza. **Non trovata conferma ufficiale.** Se vero, e se l'app non lo sa,
 genererebbe notifiche false per due settimane l'anno.
 
-**Da chiudere prima del rilascio.** Percorsi possibili: Albo Pretorio del Comune, oppure scrivere a
-`MTA.UfficioAreaC@comune.milano.it`.
+**Chiuso come rischio accettato** (M0, 2026-09-22). Non blocca il rilascio: l'errore cade dal lato sicuro,
+un promemoria di troppo e mai una multa. Se un giorno si vuole chiudere davvero, i percorsi sono l'Albo Pretorio
+del Comune o una mail a `MTA.UfficioAreaC@comune.milano.it`.
 
 Lo schema ha il campo `zones[].suspensions` per accoglierla, oggi con `periods` vuoto e `verified: false`.
 Vuoto significa "nessuna sospensione", non "non so": finché non è confermata, l'app continua a ricordare il
