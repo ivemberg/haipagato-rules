@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-22",
+  "zones": [
+    {
+      "id": "area-c",
+      "kind": "congestion",
+      "name": "Area C",
+      "geometry": { "type": "polygon", "file": "area-c.geojson", "verified": false },
+      "monitorRegions": [{ "lat": 45.4642, "lon": 9.19, "radiusM": 2200, "verified": false }],
+      "schedule": {
+        "days": ["MON", "TUE", "WED", "THU", "FRI"],
+        "from": "07:30",
+        "to": "19:30",
+        "excludeHolidays": true,
+        "verified": true,
+        "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c"
+      },
+      "deadlines": [
+        {
+          "id": "standard",
+          "rule": "endOfDay",
+          "offsetDays": 1,
+          "amountEur": 7.5,
+          "note": "Entro le ore 24.00 del giorno successivo all'avvenuto ingresso. Tariffa ordinaria.",
+          "verified": true,
+          "source": "https://www.comune.milano.it/documents/d/guest/determina-dirigenziale-n-1856-del-13-03-2026-pdf"
+        },
+        {
+          "id": "deferred",
+          "rule": "endOfDay",
+          "offsetDays": 7,
+          "amountEur": 22.5,
+          "note": "Ticket differito per accessi non regolarizzati entro le 24.00 del giorno successivo. Solo da MyAreaC, funzione \"Entro 7 giorni\", con targa registrata in \"Gestione veicoli\".",
+          "requiresRegistration": true,
+          "verified": true,
+          "source": "https://www.comune.milano.it/documents/d/guest/determina-dirigenziale-n-1856-del-13-03-2026-pdf"
+        }
+      ],
+      "reminders": ["onTransit", "evening", "lastCall"],
+      "payUrl": "https://areac.atm-mi.it/Areac/IWeb/Acquisto.aspx",
+      "accountUrl": "https://areac.atm-mi.it/Areac/IWeb/MyAreaC_HomePage.aspx",
+      "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c",
+      "verified": true,
+      "exemptions": {
+        "verified": true,
+        "source": "https://www.comune.milano.it/documents/d/guest/determina-dirigenziale-n-1856-del-13-03-2026-pdf",
+        "note": "Capitolo 6 del Disciplinare. Solo le voci automatiche sono utili all'onboarding: le altre categorie richiedono comunicazione della targa al Comune.",
+        "automatic": [
+          { "id": "electric", "label": "Veicolo elettrico" },
+          { "id": "hybridLowCo2", "label": "Auto ibrida (M1) con CO2 ≤ 100 g/km" },
+          { "id": "motorcycle", "label": "Moto, ciclomotore o velocipede" }
+        ],
+        "requiresPlateRegistration": [
+          { "id": "disabledPass", "label": "Contrassegno disabili con titolare a bordo" },
+          { "id": "emergency", "label": "Forze dell'ordine, sanità, protezione civile" }
+        ],
+        "reducedFare": [
+          { "id": "resident", "label": "Residente o equiparato in Area C", "amountEur": 3.0, "note": "50 ingressi gratuiti l'anno, poi 3 € dal 51°. Richiede registrazione a MyAreaC." },
+          { "id": "serviceVehicle", "label": "Veicolo di servizio", "amountEur": 4.5 },
+          { "id": "garage", "label": "Sosta in autorimessa convenzionata in Area C", "amountEur": 4.5, "deadlineOverride": { "rule": "endOfDay", "offsetDays": 0 }, "note": "Va attivato entro le 24.00 del giorno stesso dell'ingresso, non del giorno dopo." }
+        ]
+      }
+    }
+  ],
+  "holidays": {
+    "verified": false,
+    "note": "Le fonti ufficiali di Area C dicono solo \"festivi esclusi\" senza elencare i giorni. Questo elenco è ricostruito dalle festività civili italiane (L. 260/1963) più il patrono di Milano (Sant'Ambrogio, 7 dicembre). Non confermato da fonte Area C. Manca inoltre la conferma sull'eventuale sospensione estiva di agosto, decisa anno per anno con ordinanza.",
+    "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c",
+    "dates": [
+      { "date": "2026-11-01", "name": "Ognissanti" },
+      { "date": "2026-12-07", "name": "Sant'Ambrogio" },
+      { "date": "2026-12-08", "name": "Immacolata Concezione" },
+      { "date": "2026-12-25", "name": "Natale" },
+      { "date": "2026-12-26", "name": "Santo Stefano" },
+      { "date": "2027-01-01", "name": "Capodanno" },
+      { "date": "2027-01-06", "name": "Epifania" },
+      { "date": "2027-03-29", "name": "Lunedì dell'Angelo" },
+      { "date": "2027-04-25", "name": "Festa della Liberazione" },
+      { "date": "2027-05-01", "name": "Festa del Lavoro" },
+      { "date": "2027-06-02", "name": "Festa della Repubblica" },
+      { "date": "2027-08-15", "name": "Ferragosto" },
+      { "date": "2027-11-01", "name": "Ognissanti" },
+      { "date": "2027-12-07", "name": "Sant'Ambrogio" },
+      { "date": "2027-12-08", "name": "Immacolata Concezione" },
+      { "date": "2027-12-25", "name": "Natale" },
+      { "date": "2027-12-26", "name": "Santo Stefano" }
+    ]
+  }
+}
