@@ -154,6 +154,95 @@ Il dominio operativo è `areac.atm-mi.it` (ATM gestisce per conto del Comune), *
 
 ---
 
+## Free flow Pedemontana — A36, A59, A60 (`verified: true`)
+
+Consultate il **2026-09-22**. Il sito ufficiale del concessionario è `pedemontana.com`
+(portale operativo `apl.pedemontana.com`). `autostradapedemontanalombarda.it` non risponde.
+
+### Gestore e rete
+
+Autostrada Pedemontana Lombarda S.p.A. (P.IVA 08558150150, soggetta a direzione e coordinamento di
+Regione Lombardia) gestisce tutte e tre le tratte, elencate sotto «La rete in esercizio» del proprio sito:
+
+- **A36 Pedemontana** — [Tratta A](https://www.pedemontana.com/it/la-rete-esercizio/a36/tratta-a), Tratta B1
+- **A59 Tangenziale di Como** — https://www.pedemontana.com/it/la-rete-esercizio/a59-tangenziale-di-como
+- **A60 Tangenziale di Varese** — https://www.pedemontana.com/it/la-rete-esercizio/a60-tangenziale-di-varese
+
+Free Flow® su tutte: nessun casello, nessuna barriera, rilevamento targa da portali.
+[Come funziona il Free Flow®](https://apl.pedemontana.com/jax-web/scopri-il-free-flow.jsf):
+> «Autostrada Pedemontana Lombarda è la prima autostrada italiana [...] che ti consente di viaggiare senza doverti
+> mai fermare al casello [...] Il Sistema Free flow® non prevede la presenza dei caselli.»
+
+### Scadenza: 15 giorni (`verified: true`)
+
+[FAQ Free Flow® e pagamento del pedaggio](https://www.pedemontana.com/it/pedaggio-e-assistenza/faq/free-flow-pagamento-pedaggio):
+> «Il pagamento del pedaggio di tutti i transiti effettuati nell'arco dello stesso giorno solare deve essere
+> corrisposto entro i successivi 15 giorni naturali e consecutivi.»
+
+[I termini di pagamento](https://apl.pedemontana.com/termini-di-pagamento):
+> «Il pagamento del pedaggio deve essere effettuato entro 15 giorni solari e consecutivi dalla data di ciascun transito.»
+
+Le due formulazioni coincidono: scadenza = data del transito + 15 giorni, fine giornata.
+
+Conferma l'ipotesi in `PLAN.md`: **i transiti si aggregano per giorno solare**, non si paga per singolo passaggio.
+E l'aggregazione è per **concessionario**, non per strada: A36, A59 e A60 dello stesso giorno sono un pagamento solo.
+Per questo `rules.json` ha ora il campo `operator` sulle zone e la sezione `operators`.
+
+### Non esiste una seconda scadenza
+
+A differenza di Area C (ticket differito a 7 giorni), qui **dopo i 15 giorni non si può più pagare spontaneamente**:
+
+> «l'importo dei transiti da pagare resta visibile esclusivamente nei 15 giorni a disposizione per il pagamento.»
+
+Scaduto il termine parte il recupero crediti: sollecito con costi amministrativi, poi società esterna. In più,
+sanzione amministrativa da **87 a 344 €** e **-2 punti** sulla patente (art. 176 commi 11, 11-bis e 21 CdS;
+art. 126-bis CdS). Dal 01/06/2018 c'è collaborazione con la Polizia Stradale sulle attività sanzionatorie.
+
+**Conseguenza per l'app:** per Area C il promemoria «ultima possibilità» al settimo giorno è un ripiego utile;
+qui il quindicesimo giorno è l'unico appiglio e dopo non c'è rimedio. Il `lastCall` sulle zone free flow va
+trattato come critico, non come cortesia.
+
+### Canali ufficiali di pagamento (`verified: true`)
+
+Dalla FAQ ufficiale. Il link «Paga il pedaggio» del sito punta a `apl.pedemontana.com/jax-web/jawBridge/home.jsf` (200 OK).
+
+- **Telepedaggio** (Telepass o altro operatore SET/SIT-MP): addebito automatico al passaggio sotto il portale
+- **Conto Targa**: domiciliazione su conto corrente o carta, gratuito
+- **Ricaricabile Pedemontana**: borsellino elettronico associato alla targa, gratuito
+- **Sito** `pedemontana.com` → «Paga il pedaggio», anche via **pagoPA**
+- **App «Pedemontana Lombarda»** (App Store / Google Play)
+- **CBILL** codice azienda `0335M` e sportelli automatici Intesa Sanpaolo (commissione 0,50 €)
+- **Poste Italiane**: sezione «Paga Online» su poste.it e uffici postali
+- **Satispay**
+- **Punti di assistenza**: Punto Verde di Mozzate (CO) sull'A36; punti cortesia Milano Serravalle (A52 Sesto San Giovanni, A7 Milano Ovest)
+- Esercenti convenzionati
+
+Calcolo del pedaggio: https://apl.pedemontana.com/calcola-il-pedaggio — l'importo dipende da tratta e classe
+volumetrica del veicolo, non è un valore fisso. Per questo `amountEur` è `null` sulle zone free flow.
+
+Call center: **800 936 360** (dall'estero +39 011 089 80 90).
+
+### Esenzioni: nessuna utile all'onboarding
+
+[Esenzione dal pagamento del pedaggio](https://apl.pedemontana.com/jax-web/esenzione-dal-pagamento-del-pedaggio.jsf):
+solo art. 373 comma 2 del DPR 495/1992 — associazioni di volontariato, forze armate, funzionari abilitati al
+servizio di Polizia Stradale — e richiede autocertificazione.
+
+**Nessuna esenzione per veicoli elettrici**, a differenza di Area C. L'unico interruttore sensato per le zone
+free flow è «ho Telepass», che disattiva i promemoria perché l'addebito è automatico.
+
+Esistono sconti (non esenzioni): «Sconto 30% per motocicli», «Nuovo Piano Sconti 2026». Non incidono sulla scadenza.
+
+### Nota di sicurezza — phishing
+
+Pedemontana pubblica un [avviso sulle truffe](https://www.pedemontana.com/it/media/protetti-dalle-truffe-fate-attenzione-ai-falsi-avvisi-di-pagamento-pedaggi):
+circolano e-mail, SMS e WhatsApp che imitano richieste di pagamento pedaggi usando loghi ufficiali.
+
+È un argomento a favore dell'app: un promemoria locale che apre **solo** l'URL ufficiale è più sicuro di un SMS.
+Da valutare una riga esplicita nella schermata Info in M3.
+
+---
+
 ## Nota metodologica
 
 `comune.milano.it` risponde **403** a richieste senza User-Agent da browser. Serve `curl -sSL -A "Mozilla/5.0 ..."`.

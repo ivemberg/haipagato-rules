@@ -6,6 +6,7 @@
       "id": "area-c",
       "kind": "congestion",
       "name": "Area C",
+      "operator": "comune-milano",
       "geometry": { "type": "polygon", "file": "area-c.geojson", "verified": false },
       "monitorRegions": [{ "lat": 45.4642, "lon": 9.19, "radiusM": 2200, "verified": false }],
       "schedule": {
@@ -67,6 +68,106 @@
           { "id": "garage", "label": "Sosta in autorimessa convenzionata in Area C", "amountEur": 4.5, "deadlineOverride": { "rule": "endOfDay", "offsetDays": 0 }, "note": "Va attivato entro le 24.00 del giorno stesso dell'ingresso, non del giorno dopo." }
         ]
       }
+    },
+    {
+      "id": "a36",
+      "kind": "freeFlow",
+      "name": "A36 Pedemontana",
+      "operator": "apl",
+      "geometry": { "type": "polyline", "file": "a36.geojson", "toleranceM": 40, "verified": false },
+      "monitorRegions": [],
+      "schedule": null,
+      "suspensions": null,
+      "deadlines": [
+        {
+          "id": "standard",
+          "rule": "endOfDay",
+          "offsetDays": 15,
+          "amountEur": null,
+          "note": "15 giorni solari e consecutivi dalla data del transito. L'importo dipende da tratta percorsa e classe del veicolo: si calcola sul sito, non è un valore fisso.",
+          "verified": true,
+          "source": "https://apl.pedemontana.com/termini-di-pagamento"
+        }
+      ],
+      "reminders": ["onTransit", "dayBefore", "lastCall"],
+      "payUrl": "https://apl.pedemontana.com/jax-web/jawBridge/home.jsf",
+      "tollCalculatorUrl": "https://apl.pedemontana.com/calcola-il-pedaggio",
+      "source": "https://www.pedemontana.com/it/pedaggio-e-assistenza/faq/free-flow-pagamento-pedaggio",
+      "verified": true,
+      "exemptions": {
+        "verified": true,
+        "source": "https://apl.pedemontana.com/jax-web/esenzione-dal-pagamento-del-pedaggio.jsf",
+        "note": "Nessuna esenzione utile all'onboarding: l'art. 373 c.2 DPR 495/1992 copre solo volontariato, forze armate e polizia stradale, e richiede autocertificazione. Non esistono esenzioni per veicoli elettrici. Chi ha Telepass paga in automatico e non va avvisato.",
+        "automatic": [],
+        "requiresPlateRegistration": [],
+        "reducedFare": []
+      }
+    },
+    {
+      "id": "a59",
+      "kind": "freeFlow",
+      "name": "A59 Tangenziale di Como",
+      "operator": "apl",
+      "geometry": { "type": "polyline", "file": "a59.geojson", "toleranceM": 40, "verified": false },
+      "monitorRegions": [],
+      "schedule": null,
+      "suspensions": null,
+      "deadlines": [
+        {
+          "id": "standard",
+          "rule": "endOfDay",
+          "offsetDays": 15,
+          "amountEur": null,
+          "verified": true,
+          "source": "https://apl.pedemontana.com/termini-di-pagamento"
+        }
+      ],
+      "reminders": ["onTransit", "dayBefore", "lastCall"],
+      "payUrl": "https://apl.pedemontana.com/jax-web/jawBridge/home.jsf",
+      "tollCalculatorUrl": "https://apl.pedemontana.com/calcola-il-pedaggio",
+      "source": "https://www.pedemontana.com/it/la-rete-esercizio/a59-tangenziale-di-como",
+      "verified": true
+    },
+    {
+      "id": "a60",
+      "kind": "freeFlow",
+      "name": "A60 Tangenziale di Varese",
+      "operator": "apl",
+      "geometry": { "type": "polyline", "file": "a60.geojson", "toleranceM": 40, "verified": false },
+      "monitorRegions": [],
+      "schedule": null,
+      "suspensions": null,
+      "deadlines": [
+        {
+          "id": "standard",
+          "rule": "endOfDay",
+          "offsetDays": 15,
+          "amountEur": null,
+          "verified": true,
+          "source": "https://apl.pedemontana.com/termini-di-pagamento"
+        }
+      ],
+      "reminders": ["onTransit", "dayBefore", "lastCall"],
+      "payUrl": "https://apl.pedemontana.com/jax-web/jawBridge/home.jsf",
+      "tollCalculatorUrl": "https://apl.pedemontana.com/calcola-il-pedaggio",
+      "source": "https://www.pedemontana.com/it/la-rete-esercizio/a60-tangenziale-di-varese",
+      "verified": true
+    }
+  ],
+  "operators": [
+    {
+      "id": "comune-milano",
+      "name": "Comune di Milano",
+      "aggregateTransitsPerDay": true,
+      "note": "Il ticket giornaliero copre tutti gli ingressi dello stesso veicolo nella stessa giornata."
+    },
+    {
+      "id": "apl",
+      "name": "Autostrada Pedemontana Lombarda",
+      "aggregateTransitsPerDay": true,
+      "supportUrl": "https://www.pedemontana.com/it/pedaggio-e-assistenza",
+      "phone": "800936360",
+      "note": "Il pagamento copre tutti i transiti effettuati sullo stesso giorno solare su tutta la rete APL, quindi A36, A59 e A60 insieme."
     }
   ],
   "holidays": {
