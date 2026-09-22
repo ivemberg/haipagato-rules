@@ -66,6 +66,10 @@ genererebbe notifiche false per due settimane l'anno.
 **Da chiudere prima del rilascio.** Percorsi possibili: Albo Pretorio del Comune, oppure scrivere a
 `MTA.UfficioAreaC@comune.milano.it`.
 
+Lo schema ha il campo `zones[].suspensions` per accoglierla, oggi con `periods` vuoto e `verified: false`.
+Vuoto significa "nessuna sospensione", non "non so": finché non è confermata, l'app continua a ricordare il
+pagamento anche ad agosto. Un promemoria di troppo infastidisce, uno in meno costa una multa.
+
 ---
 
 ## Area C — scadenze di pagamento (`verified: true`)

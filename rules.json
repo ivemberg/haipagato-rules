@@ -16,6 +16,12 @@
         "verified": true,
         "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c"
       },
+      "suspensions": {
+        "verified": false,
+        "note": "Periodi di sospensione continuativa della zona, decisi anno per anno con ordinanza comunale (tipicamente due settimane in agosto). Nessuna conferma ufficiale trovata in M0: l'elenco resta vuoto. Vuoto significa nessuna sospensione, quindi l'app continua a ricordare il pagamento: un promemoria di troppo infastidisce, uno in meno costa una multa. Da chiudere via Albo Pretorio o MTA.UfficioAreaC@comune.milano.it.",
+        "source": null,
+        "periods": []
+      },
       "deadlines": [
         {
           "id": "standard",
