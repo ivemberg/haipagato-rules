@@ -1,11 +1,13 @@
 #!/bin/bash
 # Unico criterio di "verde" del progetto. Un task e' finito solo se questo script esce con 0.
 #
-# Controlla tre cose, e ognuna ha un modo noto di dare un verde falso:
+# Controlla quattro cose, e ognuna ha un modo noto di dare un verde falso:
 #   1. test Kotlin      -> "BUILD SUCCESSFUL" con zero test eseguiti
 #   2. XCFramework      -> assente o vecchio
 #   3. test iOS         -> xcodebuild esce 0 e stampa "Executed 0 tests", perche' il
 #                          reporter XCTest non conta i test Swift Testing
+#   4. superficie       -> un test che usa l'API non prova che l'API sia pulita, e senza
+#                          rigenerare il progetto un file nuovo non viene nemmeno compilato
 #
 # Per questo non ci si fida dei codici di uscita: si contano i test e si confrontano
 # con tools/test-baseline.json, che e' versionato. Se il numero cala, e' un fallimento:
@@ -47,7 +49,7 @@ except Exception:
 PY
 }
 
-echo "== 1/3  test Kotlin =="
+echo "== 1/4  test Kotlin =="
 # Si cancellano i risultati vecchi: senza, un target che smette di girare lascerebbe
 # in giro il suo XML dell'esecuzione precedente e il conteggio sembrerebbe a posto.
 rm -rf shared/build/test-results
@@ -108,7 +110,7 @@ while read -r _ target got expected; do
 done <<<"$(grep '^OK ' <<<"$kotlin_report")"
 kotlin_total=$(awk '/^OK /{s+=$3} END{print s+0}' <<<"$kotlin_report")
 
-echo "== 2/3  Shared.xcframework =="
+echo "== 2/4  Shared.xcframework =="
 ./gradlew --no-daemon :shared:assembleSharedXCFramework > /tmp/verify-xcf.log 2>&1 \
   || { tail -30 /tmp/verify-xcf.log; fail "assembleSharedXCFramework"; }
 for cfg in debug release; do
@@ -117,7 +119,7 @@ for cfg in debug release; do
 done
 green "   xcframework debug e release presenti"
 
-echo "== 3/3  test iOS su simulatore arm64 =="
+echo "== 3/4  test iOS su simulatore arm64 =="
 # Serve un simulatore arm64 concreto: con una destinazione generica il linker scarta
 # Shared senza errori, perche' l'xcframework ha solo slice arm64, e il build passa
 # senza aver linkato nulla.
@@ -166,6 +168,11 @@ ios_base=$(baseline_value ios)
 [ "$ios_passed" -ge "$ios_base" ] || \
   fail "test iOS scesi da $ios_base a $ios_passed: test cancellati o silenziati"
 green "   $ios_passed test iOS, 0 falliti (baseline $ios_base)"
+
+echo "== 4/4  nessun tipo Kotlin nella superficie pubblica =="
+# Un test che usa l'API non basta: dimostra che quel percorso e' pulito, non che l'API
+# lo sia. Qui si guarda cosa il compilatore dichiara pubblico.
+./tools/check_no_kotlin_leak.sh "$udid" || fail "tipi Kotlin nella superficie pubblica di HaiPagatoCore"
 
 echo
 green "VERDE. Kotlin $kotlin_total su $(grep -c '^OK ' <<<"$kotlin_report") target, iOS $ios_passed."
