@@ -16,9 +16,25 @@ MIN_CONSECUTIVE_POINTS = 5
 MIN_SPEED_KMH = 50.0
 MAX_BEARING_DELTA_DEG = 30.0
 MIN_PROGRESS_M = 2000.0
+# Anche il ramo veloce vuole un avanzamento minimo. Senza, bastano cinque punti
+# su una strada parallela percorsa in fretta per fabbricare un transito: il tratto
+# parallelo piu' lungo misurato e' 575 m, e a 70 km/h si copre in 30 secondi.
+MIN_FAST_PROGRESS_M = 1000.0
 # Soglie rinforzate sui tratti con viabilita' ordinaria entro TOLERANCE_M
 AMBIGUOUS_MIN_PROGRESS_M = 3000.0
+AMBIGUOUS_MIN_FAST_PROGRESS_M = 1500.0
 AMBIGUOUS_MIN_SPEED_KMH = 80.0
+
+
+def ambiguity_threshold_m(min_fast_progress=MIN_FAST_PROGRESS_M,
+                          min_progress=MIN_PROGRESS_M):
+    """Lunghezza oltre la quale un tratto parallelo puo' generare un falso positivo.
+
+    E' il minimo fra i due rami: basta che il piu' permissivo scatti. Prima della
+    correzione il ramo veloce non aveva soglia di avanzamento, quindi il minimo era
+    zero e il criterio di ambiguita' guardava solo il ramo lento.
+    """
+    return min(min_fast_progress, min_progress)
 
 
 def xy(p):
@@ -133,7 +149,9 @@ def detect(track, chains,
            min_speed=MIN_SPEED_KMH,
            max_bearing=MAX_BEARING_DELTA_DEG,
            min_progress=MIN_PROGRESS_M,
+           min_fast_progress=MIN_FAST_PROGRESS_M,
            amb_progress=AMBIGUOUS_MIN_PROGRESS_M,
+           amb_fast_progress=AMBIGUOUS_MIN_FAST_PROGRESS_M,
            amb_speed=AMBIGUOUS_MIN_SPEED_KMH,
            in_vehicle=True):
     """Rileva un transito free flow su una traccia.
@@ -156,6 +174,7 @@ def detect(track, chains,
         amb = ch.ambiguous
         need_speed = amb_speed if amb else min_speed
         need_prog = amb_progress if amb else min_progress
+        need_fast_prog = amb_fast_progress if amb else min_fast_progress
 
         loc = [ch.locate(p) for p in track]
         near = [i for i, (d, _, _) in enumerate(loc) if d <= tolerance_m]
@@ -185,13 +204,21 @@ def detect(track, chains,
         ss = [loc[i][1] for i in near]
         progress = max(ss) - min(ss)
 
-        if hit_run:
-            return ("confermato", f"{min_points} punti consecutivi sopra {need_speed:.0f} km/h e allineati")
+        # Il ramo veloce vuole anche un avanzamento minimo: cinque punti veloci e
+        # allineati si ottengono anche su una strada parallela di poche centinaia
+        # di metri, e da soli non provano di essere in autostrada.
+        if hit_run and progress > need_fast_prog:
+            return ("confermato",
+                    f"{min_points} punti sopra {need_speed:.0f} km/h allineati, "
+                    f"avanzamento {progress:.0f} m oltre {need_fast_prog:.0f} m")
         if progress > need_prog:
             return ("confermato", f"avanzamento {progress:.0f} m oltre {need_prog:.0f} m")
-        # nel dubbio, probabile invece che mancato
-        if amb and progress > need_prog * 0.5:
-            best = ("probabile", f"tratto ambiguo, avanzamento {progress:.0f} m")
-        elif progress > min_progress * 0.5:
-            best = ("probabile", f"avanzamento {progress:.0f} m sotto soglia")
+        # Nel dubbio probabile invece che mancato, ma non sotto la soglia di
+        # ambiguita': li' un tratto di strada parallela e un pezzo di autostrada
+        # sono indistinguibili, e un "probabile" sarebbe comunque un falso positivo
+        # da far confermare all'utente ogni volta che costeggia l'autostrada.
+        floor = ambiguity_threshold_m(need_fast_prog, need_prog)
+        if progress > floor:
+            best = ("probabile", f"avanzamento {progress:.0f} m sotto soglia"
+                                 + (" (tratto ambiguo)" if amb else ""))
     return best

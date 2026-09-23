@@ -13,10 +13,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from freeflow_lib import (  # noqa: E402
     Chain, stitch, dist_m, project_on_seg, seg_bearing, bearing_delta_unoriented,
-    detect, M_LON, M_LAT,
+    detect, ambiguity_threshold_m, M_LON, M_LAT,
     TOLERANCE_M, MIN_CONSECUTIVE_POINTS, MIN_SPEED_KMH, MAX_BEARING_DELTA_DEG,
-    MIN_PROGRESS_M, AMBIGUOUS_MIN_PROGRESS_M, AMBIGUOUS_MIN_SPEED_KMH,
+    MIN_PROGRESS_M, MIN_FAST_PROGRESS_M,
+    AMBIGUOUS_MIN_PROGRESS_M, AMBIGUOUS_MIN_FAST_PROGRESS_M, AMBIGUOUS_MIN_SPEED_KMH,
 )
+
+AMBIGUITY_THRESHOLD_M = ambiguity_threshold_m()
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "tools" / ".cache"
@@ -214,13 +217,20 @@ for rid, ref, name in ROADS:
             else:
                 run = 0.0
         ch.ambiguous_run_m = best
-        # marcata ambigua solo se il tratto parallelo e' lungo abbastanza da poter
-        # da solo superare la soglia di avanzamento: sotto, un falso positivo non nasce
-        ch.ambiguous = best > MIN_PROGRESS_M
+        # Ambigua se il tratto parallelo e' lungo abbastanza da far scattare il ramo
+        # piu' permissivo dei due. Il minimo fra ramo veloce e ramo lento, non il solo
+        # ramo lento: basta che uno dei due sia soddisfatto perche' nasca il transito.
+        ch.ambiguous = best > AMBIGUITY_THRESHOLD_M
         longest_overall = max(longest_overall, best)
     n_amb = sum(1 for c in roads[rid]["chains"] if c.ambiguous)
+    roads[rid]["longest_parallel_m"] = longest_overall
     print(f"  {rid}: {len(segs)} segmenti ordinari vicini, "
           f"tratto parallelo piu' lungo {longest_overall:.0f} m, catene ambigue {n_amb}")
+
+longest_any = max(r["longest_parallel_m"] for r in roads.values())
+check("la soglia di ambiguita' supera il tratto parallelo piu' lungo misurato",
+      AMBIGUITY_THRESHOLD_M > longest_any,
+      f"soglia {AMBIGUITY_THRESHOLD_M:.0f} m contro {longest_any:.0f} m misurati")
 
 print("\n== monitorRegions (massimo %d) ==" % MAX_MONITOR_REGIONS)
 all_pts = [p for r in roads.values() for c in r["chains"] for p in c.pts]
@@ -292,6 +302,24 @@ for off in (60.0, 45.0):
           d > TOLERANCE_M, f"min {d:.1f} m")
     esito, why = detect(tr, allch)
     check(f"strada parallela a {off:.0f} m: nessun transito", esito == "nessuno", why)
+
+# Il caso che il ramo veloce sbagliava prima della correzione: un tratto di strada
+# parallela lungo quanto il piu' lungo misurato sul campo, percorso in fretta.
+# Cinque punti veloci e allineati ci stanno comodamente, ma l'avanzamento no.
+par_len = round(longest_any)
+par = track_along(main, 2000, 2000 + par_len, 70, offset_m=20.0)
+par_prog = max(main.locate(p)[1] for p in par) - min(main.locate(p)[1] for p in par)
+check(f"la traccia parallela di {par_len} m e' dentro tolleranza e abbastanza veloce",
+      min(min(c.locate(p)[0] for c in allch) for p in par) <= TOLERANCE_M
+      and len(par) >= MIN_CONSECUTIVE_POINTS + 1,
+      f"avanzamento {par_prog:.0f} m, {len(par)} punti")
+esito, why = detect(par, allch)
+check(f"strada parallela di {par_len} m a 70 km/h: nessun transito", esito == "nessuno", why)
+# Senza la soglia sul ramo veloce lo stesso percorso deve produrre un transito:
+# altrimenti il test passerebbe per conto suo e non proverebbe la correzione.
+regressione, _ = detect(par, allch, min_fast_progress=0.0)
+check("senza minFastProgressM lo stesso percorso darebbe un falso positivo",
+      regressione == "confermato", f"con soglia a zero: {regressione}")
 
 import random
 random.seed(7)
