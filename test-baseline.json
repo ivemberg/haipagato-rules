@@ -1,0 +1,5 @@
+{
+  "kotlin": 318,
+  "ios": 1,
+  "note": "Numero di test che devono girare, su tutti i target. verify.sh fallisce se scendono: un test cancellato o silenziato non deve poter passare per verde. Aggiornare quando se ne aggiungono."
+}
