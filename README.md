@@ -1,8 +1,16 @@
-# `rules/` — regole e geometrie di "Hai pagato?"
+# haipagato-rules
 
-Questa cartella contiene i dati di dominio dell'app: orari, scadenze, esenzioni e geometrie delle zone.
-Viene **ridistribuita pubblicamente** su GitHub Pages, quindi le licenze dei dati di origine valgono
-anche qui e non solo dentro l'app.
+Regole e geometrie di **["Hai pagato?"](https://github.com/ivemberg/haipagato-)**, l'app che ricorda
+di pagare l'Area C di Milano e i pedaggi free flow prima che arrivi la multa.
+
+Questo repo contiene i dati di dominio dell'app: orari, scadenze, esenzioni e geometrie delle zone.
+È pubblico perché serve a due cose: essere raggiungibile via GitHub Pages per l'aggiornamento remoto
+delle regole, e ospitare dati con licenze che **non possono stare sotto la licenza di un repo
+applicativo** — CC BY 4.0 per i dati del Comune, ODbL per quelli OpenStreetMap.
+
+La storia dei commit è quella originale, importata con `git subtree split`: ogni valore di
+`rules.json` ha il commit che dice da quale fonte viene e quando è stato verificato. È la parte che
+serve a difendere il dato fra sei mesi, e per questo non è stata buttata via con una copia.
 
 ## Licenze, per file
 
@@ -39,10 +47,25 @@ la via pulita è spostarle in un file dedicato con licenza ODbL.
 ```
 python3 tools/build_areac.py      # perimetro Area C e varchi, dal Comune di Milano
 python3 tools/build_freeflow.py   # tracciati A36/A59/A60, da OpenStreetMap
+python3 tools/build_gpx.py        # percorsi GPX per il simulatore
 ```
+
+⚠️ `tools/` arriva per intero dal repo dell'app, quindi contiene anche script che **qui non hanno
+senso** (`verify.sh`, `check_no_kotlin_leak.sh`, `build_xcframework.sh`, `sync-rules.sh`): si
+riferiscono al progetto iOS e non funzionano senza. Quelli che contano qui sono i tre sopra, più
+`areac_lib.py` e `freeflow_lib.py` che usano.
 
 Entrambi usano solo la libreria standard di Python, scaricano le fonti in `tools/.cache/`
 (non versionata) ed eseguono le verifiche geometriche. **Se una verifica fallisce non scrivono nulla.**
+
+## `schemaVersion`
+
+`rules.json` dichiara `schemaVersion`, che è la versione della **forma** del file — diversa da
+`version`, che è la versione dei **dati**.
+
+Un'app vecchia deve poter leggere dati nuovi, ma non una forma che non capisce: il parser rifiuta
+un file con `schemaVersion` sconosciuto e resta su quello incluso nel bundle. Chi cambia la forma
+deve incrementarlo, altrimenti le app già installate proveranno a leggere qualcosa che non è.
 
 ## Fonti e verifiche
 
