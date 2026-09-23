@@ -387,12 +387,30 @@ entro 40 m dall'autostrada **e allineata** entro 30°:
 | A59 | 324 | 461 m | 0 |
 | A60 | 353 | 313 m | 0 |
 
-Una catena è marcata `ambiguous` solo se il tratto parallelo contiguo supera `minProgressM` (2000 m): sotto
-quella soglia un falso positivo non può nascere, perché la strada parallela non è abbastanza lunga da
-accumulare l'avanzamento richiesto. **Nessuna catena reale supera la soglia.**
+Una catena è marcata `ambiguous` se il tratto parallelo contiguo supera **`min(minFastProgressM, minProgressM)`**
+= 1000 m, cioè il ramo più permissivo dei due: basta che uno scatti perché il transito nasca.
+**Nessuna catena reale supera la soglia** — il massimo misurato è 575 m, con margine di 425 m.
 
 Il ramo `ambiguous` resta quindi non esercitato dai dati veri: è coperto da quattro casi sintetici nei test,
 altrimenti sarebbe codice non provato.
+
+### Il ramo veloce senza avanzamento minimo era un bug
+
+Nella prima stesura il ramo veloce chiedeva solo cinque punti consecutivi vicini, veloci e allineati, **senza
+alcun avanzamento minimo**. Il tratto di viabilità parallela più lungo misurato è 575 m: a 70 km/h si copre
+in mezzo minuto e produce una quindicina di punti veloci e allineati entro tolleranza. Era un falso positivo
+garantito ogni volta che si costeggia l'autostrada.
+
+Correzione: il ramo veloce vuole anche `minFastProgressM` (1000 m), scelto sopra i 575 m misurati con margine.
+Di conseguenza il criterio di ambiguità guarda ora il **minimo fra i due rami** e non il solo ramo lento:
+prima il minimo era di fatto zero, perché il ramo veloce non aveva soglia.
+
+Anche il pavimento del "probabile" è stato alzato alla stessa soglia. Sotto i 1000 m un tratto parallelo e un
+pezzo di autostrada sono indistinguibili, quindi un "probabile" sarebbe comunque un falso positivo che chiede
+conferma ogni volta che si costeggia l'autostrada.
+
+Il test contiene la prova di cogliere il bug: rieseguito con `min_fast_progress=0` lo stesso percorso
+**deve** produrre un transito confermato, altrimenti passerebbe per conto suo senza provare la correzione.
 
 ### monitorRegions
 
