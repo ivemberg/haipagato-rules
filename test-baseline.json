@@ -4,6 +4,6 @@
     "testDebugUnitTest": 141,
     "testReleaseUnitTest": 141
   },
-  "ios": 25,
+  "ios": 36,
   "note": "Test attesi per singolo target, non solo in totale: se il simulatore iOS smettesse di girare e Android guadagnasse altrettanti test, un controllo sul solo totale non se ne accorgerebbe. verify.sh fallisce se un target cala, sparisce, o se ne compare uno non in elenco. Aggiornare quando si aggiungono test."
 }
