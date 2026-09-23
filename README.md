@@ -50,10 +50,14 @@ python3 tools/build_freeflow.py   # tracciati A36/A59/A60, da OpenStreetMap
 python3 tools/build_gpx.py        # percorsi GPX per il simulatore
 ```
 
-⚠️ `tools/` arriva per intero dal repo dell'app, quindi contiene anche script che **qui non hanno
-senso** (`verify.sh`, `check_no_kotlin_leak.sh`, `build_xcframework.sh`, `sync-rules.sh`): si
-riferiscono al progetto iOS e non funzionano senza. Quelli che contano qui sono i tre sopra, più
-`areac_lib.py` e `freeflow_lib.py` che usano.
+`tools/` contiene solo gli script che rigenerano e verificano **questi dati**: i tre sopra più
+`areac_lib.py` e `freeflow_lib.py`, che contengono la geometria e le macchine a stati del
+rilevamento. Gli script del progetto iOS sono stati rimossi con un commit dedicato, e restano
+visibili nella storia perché `tools/` è arrivato per intero dallo split.
+
+I percorsi GPX in `tools/gpx/` servono al simulatore di Xcode e sono verificati: ogni file viene
+riletto e fatto passare dal rilevatore, e la velocità ricalcolata dai `<time>` deve corrispondere
+a quella dichiarata.
 
 Entrambi usano solo la libreria standard di Python, scaricano le fonti in `tools/.cache/`
 (non versionata) ed eseguono le verifiche geometriche. **Se una verifica fallisce non scrivono nulla.**
