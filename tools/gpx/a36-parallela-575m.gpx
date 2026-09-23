@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="haipagato tools/build_gpx.py" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Strada parallela all'A36, 575 m</name>
+    <desc>Costeggia l'autostrada per il tratto parallelo piu' lungo misurato: nessun transito.</desc>
+  </metadata>
+  <trk>
+    <name>Strada parallela all'A36, 575 m</name>
+    <trkseg>
+      <trkpt lat="45.653283" lon="8.862355">
+        <time>2026-09-28T08:00:00Z</time>
+      </trkpt>
+      <trkpt lat="45.653375" lon="8.862836">
+        <time>2026-09-28T08:00:02Z</time>
+      </trkpt>
+      <trkpt lat="45.653467" lon="8.863317">
+        <time>2026-09-28T08:00:04Z</time>
+      </trkpt>
+      <trkpt lat="45.653559" lon="8.863798">
+        <time>2026-09-28T08:00:06Z</time>
+      </trkpt>
+      <trkpt lat="45.653642" lon="8.864282">
+        <time>2026-09-28T08:00:08Z</time>
+      </trkpt>
+      <trkpt lat="45.653720" lon="8.864767">
+        <time>2026-09-28T08:00:10Z</time>
+      </trkpt>
+      <trkpt lat="45.653817" lon="8.865245">
+        <time>2026-09-28T08:00:12Z</time>
+      </trkpt>
+      <trkpt lat="45.653932" lon="8.865716">
+        <time>2026-09-28T08:00:14Z</time>
+      </trkpt>
+      <trkpt lat="45.654053" lon="8.866184">
+        <time>2026-09-28T08:00:16Z</time>
+      </trkpt>
+      <trkpt lat="45.654184" lon="8.866646">
+        <time>2026-09-28T08:00:18Z</time>
+      </trkpt>
+      <trkpt lat="45.654315" lon="8.867109">
+        <time>2026-09-28T08:00:20Z</time>
+      </trkpt>
+      <trkpt lat="45.654445" lon="8.867571">
+        <time>2026-09-28T08:00:22Z</time>
+      </trkpt>
+      <trkpt lat="45.654579" lon="8.868032">
+        <time>2026-09-28T08:00:24Z</time>
+      </trkpt>
+      <trkpt lat="45.654730" lon="8.868482">
+        <time>2026-09-28T08:00:26Z</time>
+      </trkpt>
+      <trkpt lat="45.654881" lon="8.868932">
+        <time>2026-09-28T08:00:28Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
