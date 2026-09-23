@@ -48,27 +48,65 @@ PY
 }
 
 echo "== 1/3  test Kotlin =="
+# Si cancellano i risultati vecchi: senza, un target che smette di girare lascerebbe
+# in giro il suo XML dell'esecuzione precedente e il conteggio sembrerebbe a posto.
+rm -rf shared/build/test-results
 ./gradlew --no-daemon :shared:allTests > /tmp/verify-kotlin.log 2>&1
 gradle_status=$?
-kotlin_count=$(python3 - <<'PY'
-import glob, xml.etree.ElementTree as ET
-total = failed = 0
+[ "$gradle_status" -eq 0 ] || { tail -30 /tmp/verify-kotlin.log; fail "gradle allTests uscito con $gradle_status"; }
+
+# Il confronto e' PER TARGET, non sul totale: se i test del simulatore iOS smettessero
+# di girare e quelli Android ne guadagnassero altrettanti, un controllo sul solo totale
+# non se ne accorgerebbe.
+kotlin_report=$(python3 - <<'PY'
+import glob, json, os, sys, xml.etree.ElementTree as ET
+from collections import defaultdict
+
+tests = defaultdict(int)
+failed = defaultdict(int)
 for f in glob.glob("shared/build/test-results/*/TEST-*.xml"):
+    target = os.path.basename(os.path.dirname(f))
     r = ET.parse(f).getroot()
-    total += int(r.get("tests", 0)); failed += int(r.get("failures", 0)) + int(r.get("errors", 0))
-print(f"{total} {failed}")
+    tests[target] += int(r.get("tests", 0))
+    failed[target] += int(r.get("failures", 0)) + int(r.get("errors", 0))
+
+try:
+    baseline = json.load(open("tools/test-baseline.json")).get("kotlin", {})
+except Exception:
+    baseline = {}
+if not isinstance(baseline, dict):
+    print("ERRORE baseline kotlin non e' un oggetto per target: aggiorna tools/test-baseline.json")
+    sys.exit(0)
+
+problems = []
+for target, expected in sorted(baseline.items()):
+    got = tests.get(target)
+    if got is None:
+        problems.append(f"il target {target} non ha eseguito alcun test (atteso {expected})")
+    elif got < expected:
+        problems.append(f"{target}: test scesi da {expected} a {got}")
+for target in sorted(tests):
+    if target not in baseline:
+        problems.append(f"NUOVO target {target} con {tests[target]} test: aggiungilo alla baseline")
+    if failed[target]:
+        problems.append(f"{target}: {failed[target]} test falliti")
+if not tests:
+    problems.append("zero test Kotlin eseguiti: un BUILD SUCCESSFUL senza test non e' verde")
+
+for p in problems:
+    print("ERRORE " + p)
+for target in sorted(tests):
+    print(f"OK {target} {tests[target]} {baseline.get(target, 0)}")
 PY
 )
-kotlin_total=${kotlin_count% *}
-kotlin_failed=${kotlin_count#* }
-kotlin_base=$(baseline_value kotlin)
-
-[ "$gradle_status" -eq 0 ] || { tail -30 /tmp/verify-kotlin.log; fail "gradle allTests uscito con $gradle_status"; }
-[ "$kotlin_total" -gt 0 ] || fail "zero test Kotlin eseguiti: un BUILD SUCCESSFUL senza test non e' verde"
-[ "$kotlin_failed" -eq 0 ] || fail "$kotlin_failed test Kotlin falliti"
-[ "$kotlin_total" -ge "$kotlin_base" ] || \
-  fail "test Kotlin scesi da $kotlin_base a $kotlin_total: test cancellati o silenziati"
-green "   $kotlin_total test Kotlin, 0 falliti (baseline $kotlin_base)"
+if grep -q '^ERRORE ' <<<"$kotlin_report"; then
+  grep '^ERRORE ' <<<"$kotlin_report" | sed 's/^ERRORE /  - /'
+  fail "baseline dei test Kotlin non rispettata"
+fi
+while read -r _ target got expected; do
+  [ -n "${target:-}" ] && green "   $target: $got test (baseline $expected)"
+done <<<"$(grep '^OK ' <<<"$kotlin_report")"
+kotlin_total=$(awk '/^OK /{s+=$3} END{print s+0}' <<<"$kotlin_report")
 
 echo "== 2/3  Shared.xcframework =="
 ./gradlew --no-daemon :shared:assembleSharedXCFramework > /tmp/verify-xcf.log 2>&1 \
@@ -130,7 +168,25 @@ ios_base=$(baseline_value ios)
 green "   $ios_passed test iOS, 0 falliti (baseline $ios_base)"
 
 echo
-green "VERDE. Kotlin $kotlin_total, iOS $ios_passed."
-if [ "$kotlin_total" -gt "$kotlin_base" ] || [ "$ios_passed" -gt "$ios_base" ]; then
-  echo "Nuovi test: aggiorna $BASELINE con { \"kotlin\": $kotlin_total, \"ios\": $ios_passed }"
+green "VERDE. Kotlin $kotlin_total su $(grep -c '^OK ' <<<"$kotlin_report") target, iOS $ios_passed."
+
+# Se qualcosa e' cresciuto lo si dice, con il JSON gia' pronto da incollare.
+grown=$(python3 - "$ios_passed" <<'PY'
+import json, sys, glob, os, xml.etree.ElementTree as ET
+from collections import defaultdict
+tests = defaultdict(int)
+for f in glob.glob("shared/build/test-results/*/TEST-*.xml"):
+    tests[os.path.basename(os.path.dirname(f))] += int(ET.parse(f).getroot().get("tests", 0))
+b = json.load(open("tools/test-baseline.json"))
+ios = int(sys.argv[1])
+if any(tests[t] > b["kotlin"].get(t, 0) for t in tests) or ios > b.get("ios", 0):
+    b["kotlin"] = dict(sorted(tests.items()))
+    b["ios"] = ios
+    print(json.dumps(b, ensure_ascii=False, indent=2))
+PY
+)
+if [ -n "$grown" ]; then
+  echo
+  echo "Test cresciuti: aggiorna $BASELINE con"
+  echo "$grown"
 fi

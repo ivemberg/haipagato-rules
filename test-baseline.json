@@ -1,5 +1,9 @@
 {
-  "kotlin": 318,
+  "kotlin": {
+    "iosSimulatorArm64Test": 106,
+    "testDebugUnitTest": 106,
+    "testReleaseUnitTest": 106
+  },
   "ios": 1,
-  "note": "Numero di test che devono girare, su tutti i target. verify.sh fallisce se scendono: un test cancellato o silenziato non deve poter passare per verde. Aggiornare quando se ne aggiungono."
+  "note": "Test attesi per singolo target, non solo in totale: se il simulatore iOS smettesse di girare e Android guadagnasse altrettanti test, un controllo sul solo totale non se ne accorgerebbe. verify.sh fallisce se un target cala, sparisce, o se ne compare uno non in elenco. Aggiornare quando si aggiungono test."
 }
