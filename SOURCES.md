@@ -288,6 +288,13 @@ Conferma l'ipotesi in `PLAN.md`: **i transiti si aggregano per giorno solare**, 
 E l'aggregazione è per **concessionario**, non per strada: A36, A59 e A60 dello stesso giorno sono un pagamento solo.
 Per questo `rules.json` ha ora il campo `operator` sulle zone e la sezione `operators`.
 
+**Pagato a metà giornata (2026-09-25).** Le fonti dicono che si paga per giorno, non dicono
+che un pagamento fatto a metà giornata copra i transiti successivi dello stesso giorno: il
+portale fa pagare i transiti che mostra in quel momento. L'app sceglie la lettura prudente —
+un «Pagato» copre solo i transiti avvenuti prima del tocco, e uno dopo è un debito nuovo — e lo
+scrive nella nota dell'operatore `apl`. Non è una regola verificata: è la direzione in cui
+sbagliare costa un promemoria, non una multa.
+
 ### Non esiste una seconda scadenza
 
 A differenza di Area C (ticket differito a 7 giorni), qui **dopo i 15 giorni non si può più pagare spontaneamente**:

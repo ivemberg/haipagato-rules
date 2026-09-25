@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "version": 1,
-  "updatedAt": "2026-09-22",
+  "version": 2,
+  "updatedAt": "2026-09-25",
   "zones": [
     {
       "id": "area-c",
@@ -366,7 +366,7 @@
       "aggregateTransitsPerDay": true,
       "supportUrl": "https://www.pedemontana.com/it/pedaggio-e-assistenza",
       "phone": "800936360",
-      "note": "Il pagamento copre tutti i transiti effettuati sullo stesso giorno solare su tutta la rete APL, quindi A36, A59 e A60 insieme."
+      "note": "Il pagamento si calcola per giorno solare su tutta la rete APL: i transiti su A36, A59 e A60 dello stesso giorno sono un debito solo. Scelta prudente dell'app: un Pagato copre solo i transiti avvenuti prima del tocco, e un transito successivo nello stesso giorno è un nuovo debito da pagare. Nessuna fonte APL dice che un pagamento fatto a metà giornata copra i transiti del pomeriggio: il portale fa pagare i transiti che mostra."
     }
   ],
   "holidays": {
