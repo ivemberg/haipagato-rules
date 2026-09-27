@@ -284,6 +284,14 @@ Free Flow® su tutte: nessun casello, nessuna barriera, rilevamento targa da por
 
 Le due formulazioni coincidono: scadenza = data del transito + 15 giorni, fine giornata.
 
+**Ricontrollato il 2026-09-27, confrontando con ASTM (A33, Corda Molle).** La FAQ di oggi dice
+ancora «entro i **successivi** 15 giorni naturali e consecutivi» per i transiti «dello stesso giorno
+solare», e aggiunge «entro 15 giorni dal transito». «I successivi» rende esplicito che i quindici
+giorni vengono dopo il giorno del transito: il giorno del transito non si conta. ASTM scrive solo
+«entro 15 giorni dall'avvenuto passaggio», senza dirlo. **Le formule sono diverse**, quindi:
+APL resta a `offsetDays` 15 (fine del quindicesimo giorno dopo il transito), ASTM a 14 (lettura
+prudente, D1). Se un giorno ASTM scrivesse «successivi», anche lì si potrà passare a 15.
+
 Conferma l'ipotesi in `PLAN.md`: **i transiti si aggregano per giorno solare**, non si paga per singolo passaggio.
 E l'aggregazione è per **concessionario**, non per strada: A36, A59 e A60 dello stesso giorno sono un pagamento solo.
 Per questo `rules.json` ha ora il campo `operator` sulle zone e la sezione `operators`.
@@ -450,6 +458,90 @@ Due test contengono un controllo del proprio presupposto, perché senza passereb
 - la strada parallela verifica di essere **fuori tolleranza da tutta la rete** prima di pretendere zero
   transiti. Con carreggiata doppia, spostarsi di 45 m dal verso sbagliato finisce sull'altra carreggiata,
   a meno di 40 m, e il test non proverebbe nulla.
+
+---
+
+## Free flow ASTM — A33 Asti-Cuneo e Corda Molle (`verified: true`, 2026-09-27)
+
+Consultate il 2026-09-27. Piano e decisioni in `docs/plans/zone-02-a33-cordamolle-areab.md`.
+
+### A33 Asti-Cuneo — Autostrada Asti-Cuneo (gruppo ASTM)
+
+- **Tratta**, https://www.asticuneo.it/applicazione-sulla-tratta/: «Il sistema Free Flow interessa
+  esclusivamente il tronco II (da Marene sulla A6 a loc. Rocca Schiavino sulla SS231)»; «Il tronco I (da
+  Cuneo a Massimini sulla A6) […] continuerà ad essere gestito con le modalità di esazione tradizionali»;
+  «8 portali in linea e un portale dedicato all'ospedale di Verduno»; completamento funzionale il
+  30.12.2025, P-07 dal 20 aprile 2026, pagamenti P-06/P-07 dal 4 maggio 2026.
+- **Termine**, https://www.asticuneo.it/modalita-e-termini-di-pagamento/: «Le persone che non utilizzano i
+  dispositivi di telepedaggio potranno pagare entro 15 giorni dall'avvenuto passaggio».
+- **Pagamento**: piattaforma https://a33ffpagaonline.astmservice.it/freeflow/ e app «FreeFlow A33», dalla
+  stessa pagina.
+
+### Corda Molle — Autovia Padana (gruppo ASTM)
+
+- **Tratta**, https://www.autoviapadana.it/applicazione-sulla-tratta/: «Il sistema Free Flow interessa
+  esclusivamente il Raccordo Autostradale Ospitaletto – Montichiari», 10 portali in linea; la mappa
+  ufficiale (`wp-content/uploads/2026/02/Autovia-Padana-mappa-Free-Flow.png`) mostra i portali 1-10 lungo
+  tutto il raccordo, dalla A4 a Ospitaletto all'estremo est.
+- **Termine**, https://www.autoviapadana.it/modalita-e-termini-di-pagamento/ e comunicato del 16/02/2026
+  (https://www.autoviapadana.it/wp-content/uploads/2026/02/2026.02.16_PedaggiamentoCordaMolle_FINALE.pdf):
+  «il pagamento potrà essere regolarizzato entro 15 giorni dal passaggio».
+- **Pagamento**: piattaforma https://a21ffpagaonline.astmservice.it/freeflow e app «FreeFlow A21»
+  (https://www.autoviapadana.it/il-sistema-free-flow/). Attivo dal 1 marzo 2026.
+- **Residenti**: esenti i residenti dei 22 comuni del raccordo fino al 28/02/2027, al 50% i residenti a
+  Brescia, **solo** con telepedaggio o Conto Targa (comunicato del 16/02/2026).
+
+### Scadenza: 14 giorni dopo il giorno del passaggio (lettura prudente)
+
+«Entro 15 giorni dall'avvenuto passaggio» non dice se il giorno del passaggio conti. Si conta come primo
+dei quindici: `offsetDays` 14, la fine del quattordicesimo giorno dopo. Un giorno in meno costa un
+promemoria anticipato, uno in più una sanzione (decisione D1).
+
+### Tracciati (`tools/build_freeflow_astm.py`)
+
+- **A33**: `way[highway=motorway][ref~^A ?33$]`, tenute solo le catene a nord di 44,55° N (il tronco I sta
+  tutto più a sud). **Limite noto**: il lotto fra Roddi e Alba (circa 5 km) in OSM **non c'è**, né come
+  autostrada né in costruzione (ricontrollato il 2026-09-27: nel buco fra 7,9999 E e 8,0485 E ci sono solo la
+  tangenziale di Alba, SP3bis/SS231 `trunk`, e la rotatoria di Scaparoni `highway=construction`), e il traffico
+  passa sulla tangenziale: un passaggio solo lì non si rileva. L'A33 lo dice all'utente con il
+  `coverageNotice` (IT/EN), e `tools/check_a33_roddi_alba.py`, da lanciare prima di ogni release delle regole,
+  dice quando nel buco compare un'autostrada o una way `ref=A33` che `a33.geojson` non ha.
+- **Corda Molle**: `way[highway=motorway][ref=A21racc]`. In OSM le due carreggiate si toccano ai capi e
+  `stitch` ne faceva un anello unico di 56,8 km: lo script le divide nel punto più lontano dall'inizio,
+  altrimenti un punto fermo sembrava avanzare di decine di km (verifica del veicolo fermo, vista fallire).
+- **Tratti ambigui**: una strada ordinaria entro 40 m e allineata per 1398 m (A33) e 1177 m (Corda
+  Molle), sopra la soglia di 1000 m: quelle catene usano le soglie `ambiguousMin*` già in `rules.json`.
+  Nessuna soglia cambiata.
+- **Cerchi**: stesso raggio di copertura dell'APL (2445 m + 500 m di margine), distanze haversine: ogni
+  punto delle tratte sta almeno 500 m dentro un cerchio (verificato dallo script e da `DoublePassageTest`).
+  A33 9 cerchi, Corda Molle 6: con i 13 di prima fanno 28, oltre i 20 di CLMonitor, e iOS sorveglia le
+  sole zone vicine (`selectMonitorRegions`).
+- **Verifiche**, le stesse dell'A36 più la strada ordinaria parallela più vicina trovata in OSM (usata anche
+  per il GPX): tutte verdi.
+
+---
+
+## Area B e Area C — calendario dei divieti per le autovetture (`verified: true`, 2026-09-27)
+
+Solo informativo, solo autovetture per trasporto persone (M1) benzina e diesel.
+
+- **Area B**: https://www.comune.milano.it/argomenti/mobilita/area-b-calendario-dei-divieti (ultimo
+  aggiornamento 07/09/2026), sezione «Autoveicoli per trasporto persone»: «Divieti già in vigore» benzina
+  Euro 0, 1, 2 e diesel Euro 0-5; «Dal 1° ottobre 2025: Euro 3 benzina»; «Dal 1° ottobre 2028: Euro 4
+  benzina, Euro 6 diesel leggeri A-B-C»; «Dal 1° ottobre 2030: Euro 6 diesel D_TEMP, Euro 6 diesel D».
+- **Area C**: DD n. 1856 del 13/03/2026, capitolo 15, «Autoveicoli per trasporto persone (M1)»: benzina
+  Euro 0 dal 25/02/2019, Euro 1 dal 01/10/2019, Euro 2 dal 01/10/2022, Euro 3 dal 01/10/2024, **Euro 4 dal
+  01/10/2027**, Euro 5 dal 01/10/2030; diesel Euro 0-5 già vietati, Euro 6 A-B-C dal 01/10/2028, Euro 6
+  D_TEMP-D dal 01/10/2029. Coerente con https://www.comune.milano.it/argomenti/mobilita/area-c-calendario-dei-divieti
+  (ultimo aggiornamento 28/07/2026).
+- **Fuori**: GPL, metano, ibride, elettriche (nessuna regola da leggere senza interpretarla); il calendario
+  dei **residenti** in Area C (diverso, stesso capitolo); le moto (la pagina italiana dell'Area B dice «Dal
+  1° ottobre 2026» per le moto Euro 2-3, quella inglese «1 October 2027»: una discordanza fra le due
+  traduzioni, che l'app non deve risolvere). Per questi casi la scheda mostra solo il link al Comune.
+- **Move-In**: https://www.movein.regione.lombardia.it/, solo come link.
+- **Indirizzi**: nel 2026 il Comune ha spostato le pagine da `/aree-tematiche/mobilita/…` a
+  `/argomenti/mobilita/…`; i vecchi indirizzi portano alla home. Corretti in `rules.json` e nella
+  schermata Informazioni.
 
 ---
 

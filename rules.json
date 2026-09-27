@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
-  "version": 2,
-  "updatedAt": "2026-09-25",
+  "schemaVersion": 2,
+  "version": 3,
+  "updatedAt": "2026-09-27",
   "zones": [
     {
       "id": "area-c",
@@ -42,7 +42,7 @@
         "to": "19:30",
         "excludeHolidays": true,
         "verified": true,
-        "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c"
+        "source": "https://www.comune.milano.it/argomenti/mobilita/area-c"
       },
       "suspensions": {
         "verified": false,
@@ -78,7 +78,7 @@
       ],
       "payUrl": "https://areac.atm-mi.it/Areac/IWeb/Acquisto.aspx",
       "accountUrl": "https://areac.atm-mi.it/Areac/IWeb/MyAreaC_HomePage.aspx",
-      "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c",
+      "source": "https://www.comune.milano.it/argomenti/mobilita/area-c",
       "verified": true,
       "exemptions": {
         "verified": true,
@@ -351,6 +351,200 @@
       "tollCalculatorUrl": "https://apl.pedemontana.com/calcola-il-pedaggio",
       "source": "https://www.pedemontana.com/it/la-rete-esercizio/a60-tangenziale-di-varese",
       "verified": true
+    },
+    {
+      "id": "a33",
+      "kind": "freeFlow",
+      "name": "A33 Asti-Cuneo",
+      "operator": "asti-cuneo",
+      "enabled": true,
+      "coverageNotice": {
+        "it": "Il tratto nuovo fra Roddi e Alba non è ancora coperto dal rilevamento: se percorri solo quello, l'app non registra il passaggio. Controlla sul sito Asti-Cuneo se c'è da pagare e, nel caso, aggiungi il passaggio a mano.",
+        "en": "The new section between Roddi and Alba is not yet covered by detection: if you drive only on it, the app does not record the passage. Check on the Asti-Cuneo website whether you need to pay and, if so, add the passage by hand."
+      },
+      "geometry": {
+        "type": "polyline",
+        "file": "a33.geojson",
+        "toleranceM": 40,
+        "minConsecutivePoints": 5,
+        "minSpeedKmh": 50,
+        "maxBearingDeltaDeg": 30,
+        "minProgressM": 2000,
+        "minFastProgressM": 1000,
+        "ambiguousMinProgressM": 3000,
+        "ambiguousMinFastProgressM": 1500,
+        "ambiguousMinSpeedKmh": 80,
+        "requiresInVehicle": true,
+        "note": "Transito se almeno una fra: minConsecutivePoints punti consecutivi entro toleranceM con velocità sopra minSpeedKmh e giacitura allineata entro maxBearingDeltaDeg E avanzamento oltre minFastProgressM; oppure avanzamento oltre minProgressM. Anche il ramo veloce vuole un avanzamento minimo: senza, bastano cinque punti su una strada parallela di poche centinaia di metri percorsa in fretta per fabbricare un transito. L'avanzamento è il progresso della proiezione sulla polilinea (max s - min s), non la lunghezza del percorso GPS: un veicolo fermo con rumore GPS non deve accumulare metri. L'allineamento è non orientato, modulo 180°, perché una carreggiata doppia è due way OSM con verso opposto. Sotto min(minFastProgressM, minProgressM) l'esito non può essere nemmeno probabile: lì un tratto parallelo e un pezzo di autostrada sono indistinguibili. Sulle feature con ambiguous=true valgono le soglie ambiguousMin*. A33: solo il tronco II, da Marene (A6) a Rocca Schiavino (SS231), l'unico in free flow; il tronco I Cuneo-Massimini ha i caselli ed è escluso. Limite noto al 2026-09-27: il lotto nuovo fra Roddi e Alba (circa 5 km, aperto il 30/12/2025) in OSM non c'è ancora e il traffico passa sulla tangenziale di Alba (SS231, non a pagamento): un passaggio solo su quel tratto non viene rilevato. Due catene hanno una strada ordinaria parallela entro 40 m per 1398 m e usano le soglie ambiguousMin*.",
+        "verified": true,
+        "source": "https://www.openstreetmap.org/ — estrazione e verifiche in tools/build_freeflow_astm.py"
+      },
+      "monitorRegions": [
+        {
+          "lat": 44.664691,
+          "lon": 7.806998,
+          "radiusM": 2904,
+          "verified": true
+        },
+        {
+          "lat": 44.687534,
+          "lon": 7.972572,
+          "radiusM": 2725,
+          "verified": true
+        },
+        {
+          "lat": 44.676468,
+          "lon": 7.912424,
+          "radiusM": 2906,
+          "verified": true
+        },
+        {
+          "lat": 44.662607,
+          "lon": 7.856165,
+          "radiusM": 2943,
+          "verified": true
+        },
+        {
+          "lat": 44.842147,
+          "lon": 8.186723,
+          "radiusM": 2865,
+          "verified": true
+        },
+        {
+          "lat": 44.814623,
+          "lon": 8.138897,
+          "radiusM": 2848,
+          "verified": true
+        },
+        {
+          "lat": 44.777732,
+          "lon": 8.110237,
+          "radiusM": 2917,
+          "verified": true
+        },
+        {
+          "lat": 44.74356,
+          "lon": 8.072714,
+          "radiusM": 2907,
+          "verified": true
+        },
+        {
+          "lat": 44.721315,
+          "lon": 8.048433,
+          "radiusM": 2775,
+          "verified": true
+        }
+      ],
+      "deadlines": [
+        {
+          "id": "standard",
+          "rule": "endOfDay",
+          "offsetDays": 14,
+          "amountEur": null,
+          "note": "«Entro 15 giorni dall'avvenuto passaggio». Letto in modo prudente: il giorno del passaggio conta come primo dei quindici, quindi la scadenza è la fine del quattordicesimo giorno dopo (docs/plans/zone-02-a33-cordamolle-areab.md, D1). L'importo dipende da tratta e classe: si calcola sul sito.",
+          "verified": true,
+          "source": "https://www.asticuneo.it/modalita-e-termini-di-pagamento/"
+        }
+      ],
+      "reminders": [
+        "onTransit",
+        "dayBefore",
+        "lastCall"
+      ],
+      "payUrl": "https://a33ffpagaonline.astmservice.it/freeflow/",
+      "tollCalculatorUrl": "https://www.asticuneo.it/tariffe-e-pedaggi/",
+      "source": "https://www.asticuneo.it/applicazione-sulla-tratta/",
+      "verified": true
+    },
+    {
+      "id": "corda-molle",
+      "kind": "freeFlow",
+      "name": "Corda Molle",
+      "operator": "autovia-padana",
+      "enabled": true,
+      "geometry": {
+        "type": "polyline",
+        "file": "corda-molle.geojson",
+        "toleranceM": 40,
+        "minConsecutivePoints": 5,
+        "minSpeedKmh": 50,
+        "maxBearingDeltaDeg": 30,
+        "minProgressM": 2000,
+        "minFastProgressM": 1000,
+        "ambiguousMinProgressM": 3000,
+        "ambiguousMinFastProgressM": 1500,
+        "ambiguousMinSpeedKmh": 80,
+        "requiresInVehicle": true,
+        "note": "Transito se almeno una fra: minConsecutivePoints punti consecutivi entro toleranceM con velocità sopra minSpeedKmh e giacitura allineata entro maxBearingDeltaDeg E avanzamento oltre minFastProgressM; oppure avanzamento oltre minProgressM. Anche il ramo veloce vuole un avanzamento minimo: senza, bastano cinque punti su una strada parallela di poche centinaia di metri percorsa in fretta per fabbricare un transito. L'avanzamento è il progresso della proiezione sulla polilinea (max s - min s), non la lunghezza del percorso GPS: un veicolo fermo con rumore GPS non deve accumulare metri. L'allineamento è non orientato, modulo 180°, perché una carreggiata doppia è due way OSM con verso opposto. Sotto min(minFastProgressM, minProgressM) l'esito non può essere nemmeno probabile: lì un tratto parallelo e un pezzo di autostrada sono indistinguibili. Sulle feature con ambiguous=true valgono le soglie ambiguousMin*. Corda Molle: il Raccordo autostradale Ospitaletto-Montichiari (in OSM highway=motorway ref=A21racc), tutto in free flow con 10 portali dal 1/3/2026; la SP19 che prosegue a nord della A4 resta fuori. Una catena ha una strada ordinaria parallela entro 40 m per 1177 m e usa le soglie ambiguousMin*.",
+        "verified": true,
+        "source": "https://www.openstreetmap.org/ — estrazione e verifiche in tools/build_freeflow_astm.py"
+      },
+      "monitorRegions": [
+        {
+          "lat": 45.546559,
+          "lon": 10.054354,
+          "radiusM": 2944,
+          "verified": true
+        },
+        {
+          "lat": 45.50521,
+          "lon": 10.071939,
+          "radiusM": 2918,
+          "verified": true
+        },
+        {
+          "lat": 45.482699,
+          "lon": 10.12402,
+          "radiusM": 2871,
+          "verified": true
+        },
+        {
+          "lat": 45.474135,
+          "lon": 10.186057,
+          "radiusM": 2860,
+          "verified": true
+        },
+        {
+          "lat": 45.460477,
+          "lon": 10.243415,
+          "radiusM": 2890,
+          "verified": true
+        },
+        {
+          "lat": 45.450971,
+          "lon": 10.303233,
+          "radiusM": 2834,
+          "verified": true
+        }
+      ],
+      "deadlines": [
+        {
+          "id": "standard",
+          "rule": "endOfDay",
+          "offsetDays": 14,
+          "amountEur": null,
+          "note": "«Pagare entro 15 giorni dall'avvenuto passaggio». Stessa lettura prudente dell'A33 (D1). L'importo dipende dal percorso effettivo (circa 0,12 €/km per le auto): si calcola sul sito.",
+          "verified": true,
+          "source": "https://www.autoviapadana.it/modalita-e-termini-di-pagamento/"
+        }
+      ],
+      "reminders": [
+        "onTransit",
+        "dayBefore",
+        "lastCall"
+      ],
+      "payUrl": "https://a21ffpagaonline.astmservice.it/freeflow",
+      "tollCalculatorUrl": "https://www.autoviapadana.it/tariffe-e-pedaggi/",
+      "source": "https://www.autoviapadana.it/applicazione-sulla-tratta/",
+      "verified": true,
+      "exemptions": {
+        "verified": true,
+        "source": "https://www.autoviapadana.it/wp-content/uploads/2026/02/2026.02.16_PedaggiamentoCordaMolle_FINALE.pdf",
+        "note": "Residenti dei 22 comuni del raccordo esenti fino al 28/02/2027 (classi 1 e 2), residenti a Brescia al 50%: solo con telepedaggio o Conto Targa, cioè chi paga già in automatico e ha acceso «Telepass o simili». Nessuna esenzione automatica utile all'app.",
+        "automatic": [],
+        "requiresPlateRegistration": [],
+        "reducedFare": []
+      }
     }
   ],
   "operators": [
@@ -358,7 +552,8 @@
       "id": "comune-milano",
       "name": "Comune di Milano",
       "aggregateTransitsPerDay": true,
-      "note": "Il ticket giornaliero copre tutti gli ingressi dello stesso veicolo nella stessa giornata."
+      "note": "Il ticket giornaliero copre tutti gli ingressi dello stesso veicolo nella stessa giornata.",
+      "shortName": "Comune di Milano"
     },
     {
       "id": "apl",
@@ -366,7 +561,25 @@
       "aggregateTransitsPerDay": true,
       "supportUrl": "https://www.pedemontana.com/it/pedaggio-e-assistenza",
       "phone": "800936360",
-      "note": "Il pagamento si calcola per giorno solare su tutta la rete APL: i transiti su A36, A59 e A60 dello stesso giorno sono un debito solo. Scelta prudente dell'app: un Pagato copre solo i transiti avvenuti prima del tocco, e un transito successivo nello stesso giorno è un nuovo debito da pagare. Nessuna fonte APL dice che un pagamento fatto a metà giornata copra i transiti del pomeriggio: il portale fa pagare i transiti che mostra."
+      "note": "Il pagamento si calcola per giorno solare su tutta la rete APL: i transiti su A36, A59 e A60 dello stesso giorno sono un debito solo. Scelta prudente dell'app: un Pagato copre solo i transiti avvenuti prima del tocco, e un transito successivo nello stesso giorno è un nuovo debito da pagare. Nessuna fonte APL dice che un pagamento fatto a metà giornata copra i transiti del pomeriggio: il portale fa pagare i transiti che mostra.",
+      "shortName": "Pedemontana"
+    },
+    {
+      "id": "asti-cuneo",
+      "name": "Autostrada Asti-Cuneo",
+      "shortName": "Asti-Cuneo",
+      "aggregateTransitsPerDay": true,
+      "supportUrl": "https://www.asticuneo.it/modalita-e-termini-di-pagamento/",
+      "note": "Gruppo ASTM. La piattaforma elenca i transiti uno per uno; l'app li raccoglie in un debito per giorno, come per l'APL, e la scadenza è quella del giorno. Scelta dell'app, non del gestore: vedi docs/plans/zone-02-a33-cordamolle-areab.md, D2."
+    },
+    {
+      "id": "autovia-padana",
+      "name": "Autovia Padana",
+      "shortName": "Autovia Padana",
+      "aggregateTransitsPerDay": true,
+      "supportUrl": "https://www.autoviapadana.it/modalita-e-termini-di-pagamento/",
+      "phone": "803333",
+      "note": "Gruppo ASTM. Come per l'Asti-Cuneo: un debito per giorno, scelta dell'app (D2)."
     }
   ],
   "holidays": {
@@ -441,6 +654,167 @@
       {
         "date": "2027-12-26",
         "name": "Santo Stefano"
+      }
+    ]
+  },
+  "vehicleRestrictions": {
+    "note": "Solo informativo: nessuna geometria e nessun rilevamento. Solo autovetture per trasporto persone (M1) benzina e diesel, le uniche per cui le fonti danno una regola che l'app sa leggere senza interpretarla; per le altre alimentazioni, per i residenti in Area C e per le moto la scheda mostra solo il link al Comune. Un divieto con from null è già in vigore.",
+    "moveInUrl": "https://www.movein.regione.lombardia.it/",
+    "areas": [
+      {
+        "id": "area-b",
+        "name": "Area B",
+        "infoUrl": "https://www.comune.milano.it/argomenti/mobilita/area-b",
+        "calendarUrl": "https://www.comune.milano.it/argomenti/mobilita/area-b-calendario-dei-divieti",
+        "checkedAt": "2026-09-27",
+        "verified": true,
+        "source": "https://www.comune.milano.it/argomenti/mobilita/area-b-calendario-dei-divieti (pagina del Comune, ultimo aggiornamento 07/09/2026, sezione «Autoveicoli per trasporto persone»)",
+        "note": "«Divieti già in vigore»: benzina Euro 0, 1, 2; diesel Euro 0-5 (con o senza FAP); gasolio-GPL e gasolio-metano Euro 0-4. «Dal 1° ottobre 2025: Euro 3 benzina». «Dal 1° ottobre 2028: Euro 4 benzina, Euro 6 diesel leggeri A-B-C». «Dal 1° ottobre 2030: Euro 6 diesel D_TEMP, Euro 6 diesel D».",
+        "bans": [
+          {
+            "fuel": "petrol",
+            "euro": [
+              0,
+              1,
+              2
+            ],
+            "from": null
+          },
+          {
+            "fuel": "petrol",
+            "euro": [
+              3
+            ],
+            "from": "2025-10-01"
+          },
+          {
+            "fuel": "petrol",
+            "euro": [
+              4
+            ],
+            "from": "2028-10-01"
+          },
+          {
+            "fuel": "diesel",
+            "euro": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "from": null
+          },
+          {
+            "fuel": "diesel",
+            "euro": [
+              6
+            ],
+            "diesel6": [
+              "ABC"
+            ],
+            "from": "2028-10-01"
+          },
+          {
+            "fuel": "diesel",
+            "euro": [
+              6
+            ],
+            "diesel6": [
+              "DTEMP",
+              "D"
+            ],
+            "from": "2030-10-01"
+          }
+        ]
+      },
+      {
+        "id": "area-c",
+        "name": "Area C",
+        "infoUrl": "https://www.comune.milano.it/argomenti/mobilita/area-c",
+        "calendarUrl": "https://www.comune.milano.it/argomenti/mobilita/area-c-calendario-dei-divieti",
+        "checkedAt": "2026-09-27",
+        "verified": true,
+        "source": "https://www.comune.milano.it/documents/d/guest/determina-dirigenziale-n-1856-del-13-03-2026-pdf (DD n. 1856 del 13/03/2026, cap. 15, «Autoveicoli per trasporto persone (M1)»), coerente con la pagina del calendario (ultimo aggiornamento 28/07/2026)",
+        "note": "Vale per chi non è residente in Area C: i residenti hanno un calendario diverso (stesso capitolo, «Autoveicoli di residenti (M1)»), che l'app non applica. Benzina: Euro 0 dal 25/02/2019, Euro 1 dal 01/10/2019, Euro 2 dal 01/10/2022, Euro 3 dal 01/10/2024, Euro 4 dal 01/10/2027, Euro 5 dal 01/10/2030. Diesel: Euro 0-4 e Euro 5 già vietati (al più tardi dal 01/10/2022), Euro 6 A-B-C dal 01/10/2028, Euro 6 D_TEMP e D dal 01/10/2029.",
+        "bans": [
+          {
+            "fuel": "petrol",
+            "euro": [
+              0
+            ],
+            "from": "2019-02-25"
+          },
+          {
+            "fuel": "petrol",
+            "euro": [
+              1
+            ],
+            "from": "2019-10-01"
+          },
+          {
+            "fuel": "petrol",
+            "euro": [
+              2
+            ],
+            "from": "2022-10-01"
+          },
+          {
+            "fuel": "petrol",
+            "euro": [
+              3
+            ],
+            "from": "2024-10-01"
+          },
+          {
+            "fuel": "petrol",
+            "euro": [
+              4
+            ],
+            "from": "2027-10-01"
+          },
+          {
+            "fuel": "petrol",
+            "euro": [
+              5
+            ],
+            "from": "2030-10-01"
+          },
+          {
+            "fuel": "diesel",
+            "euro": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "from": null
+          },
+          {
+            "fuel": "diesel",
+            "euro": [
+              6
+            ],
+            "diesel6": [
+              "ABC"
+            ],
+            "from": "2028-10-01"
+          },
+          {
+            "fuel": "diesel",
+            "euro": [
+              6
+            ],
+            "diesel6": [
+              "DTEMP",
+              "D"
+            ],
+            "from": "2029-10-01"
+          }
+        ]
       }
     ]
   }

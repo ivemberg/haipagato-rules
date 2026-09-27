@@ -21,7 +21,7 @@ dichiarata per file, sia in questa tabella sia nel campo `attribution` in testa 
 |---|---|---|---|
 | `area-c.geojson` | [Comune di Milano, dataset `ds51`](https://dati.comune.milano.it/dataset/ds51_trafficotrasporti_aree_pedonali_ztl) | **CC BY 4.0** | Contiene dati del Comune di Milano — dati.comune.milano.it, licenza CC BY 4.0 |
 | `area-c-varchi.geojson` | [Comune di Milano, dataset `ds82`](https://dati.comune.milano.it/dataset/ds82_infogeo_varchi_elettronici_localizzazione_) | **CC BY 4.0** | idem |
-| `a36.geojson`, `a59.geojson`, `a60.geojson` | OpenStreetMap via Overpass | **ODbL 1.0** | © OpenStreetMap contributors |
+| `a36.geojson`, `a59.geojson`, `a60.geojson`, `a33.geojson`, `corda-molle.geojson` | OpenStreetMap via Overpass | **ODbL 1.0** | © OpenStreetMap contributors |
 | `rules.json` | redazione propria, da fonti ufficiali citate in `SOURCES.md` | vedi sotto | — |
 
 ## Perché `rules.json` non contiene geometrie
@@ -45,12 +45,14 @@ la via pulita è spostarle in un file dedicato con licenza ODbL.
 ## Rigenerare i dati
 
 ```
-python3 tools/build_areac.py      # perimetro Area C e varchi, dal Comune di Milano
-python3 tools/build_freeflow.py   # tracciati A36/A59/A60, da OpenStreetMap
-python3 tools/build_gpx.py        # percorsi GPX per il simulatore
+python3 tools/build_areac.py           # perimetro Area C e varchi, dal Comune di Milano
+python3 tools/build_freeflow.py        # tracciati A36/A59/A60, da OpenStreetMap
+python3 tools/build_freeflow_astm.py   # tracciati A33 e Corda Molle, da OpenStreetMap
+python3 tools/build_gpx.py             # percorsi GPX per il simulatore
+python3 tools/check_a33_roddi_alba.py  # prima di ogni release: il lotto Roddi–Alba è in OSM?
 ```
 
-`tools/` contiene solo gli script che rigenerano e verificano **questi dati**: i tre sopra più
+`tools/` contiene solo gli script che rigenerano e verificano **questi dati**: quelli sopra più
 `areac_lib.py` e `freeflow_lib.py`, che contengono la geometria e le macchine a stati del
 rilevamento. Gli script del progetto iOS sono stati rimossi con un commit dedicato, e restano
 visibili nella storia perché `tools/` è arrivato per intero dallo split.
@@ -70,6 +72,25 @@ Entrambi usano solo la libreria standard di Python, scaricano le fonti in `tools
 Un'app vecchia deve poter leggere dati nuovi, ma non una forma che non capisce: il parser rifiuta
 un file con `schemaVersion` sconosciuto e resta su quello incluso nel bundle. Chi cambia la forma
 deve incrementarlo, altrimenti le app già installate proveranno a leggere qualcosa che non è.
+
+Lo **schema 2** (dalla versione 3 dei dati, 2026-09-27) aggiunge campi, tutti facoltativi:
+`zone.enabled` (una zona spenta si valida ma l'app non la vede), `operator.shortName`,
+`vehicleRestrictions` (il calendario dei divieti di Area B e Area C, solo informativo) e
+`zone.coverageNotice` (sotto).
+
+## Limiti noti del rilevamento (`coverageNotice`)
+
+Una zona può portare un `coverageNotice` con lo stesso avviso in italiano (`it`) e in inglese
+(`en`), tutti e due obbligatori: l'app lo mostra in Info, nell'aggiunta manuale e nel dettaglio di
+un passaggio su quella zona. Serve per un limite che l'utente deve conoscere e che non dipende
+dall'app, e sparisce con una versione nuova delle regole quando sparisce il limite.
+
+Oggi ce l'ha solo l'A33: il lotto nuovo fra Roddi e Alba in OSM non c'è ancora (né autostrada né
+cantiere), quindi `a33.geojson` non lo contiene. **Prima di ogni release delle regole**
+`python3 tools/check_a33_roddi_alba.py` controlla che OSM, `a33.geojson` e l'avviso dicano la
+stessa cosa: esce con 0 finché il lotto non è un'autostrada in OSM e l'avviso c'è (o, dopo, quando
+la geometria lo copre e l'avviso non c'è più); con 1 e le istruzioni quando qualcosa non torna; con
+2 se Overpass non risponde.
 
 ## Fonti e verifiche
 
