@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="haipagato tools/build_gpx.py" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Strada ordinaria parallela alla Corda Molle</name>
+    <desc>La strada ordinaria allineata piu' vicina al raccordo, trovata in OSM: nessun transito.</desc>
+  </metadata>
+  <trk>
+    <name>Strada ordinaria parallela alla Corda Molle</name>
+    <trkseg>
+      <trkpt lat="45.449891" lon="10.287655">
+        <time>2026-09-28T08:00:00Z</time>
+      </trkpt>
+      <trkpt lat="45.450085" lon="10.287239">
+        <time>2026-09-28T08:00:02Z</time>
+      </trkpt>
+      <trkpt lat="45.450276" lon="10.286821">
+        <time>2026-09-28T08:00:04Z</time>
+      </trkpt>
+      <trkpt lat="45.450446" lon="10.286385">
+        <time>2026-09-28T08:00:06Z</time>
+      </trkpt>
+      <trkpt lat="45.450607" lon="10.285943">
+        <time>2026-09-28T08:00:08Z</time>
+      </trkpt>
+      <trkpt lat="45.450771" lon="10.285502">
+        <time>2026-09-28T08:00:10Z</time>
+      </trkpt>
+      <trkpt lat="45.450968" lon="10.285089">
+        <time>2026-09-28T08:00:12Z</time>
+      </trkpt>
+      <trkpt lat="45.451150" lon="10.284664">
+        <time>2026-09-28T08:00:14Z</time>
+      </trkpt>
+      <trkpt lat="45.451333" lon="10.284238">
+        <time>2026-09-28T08:00:16Z</time>
+      </trkpt>
+      <trkpt lat="45.451504" lon="10.283802">
+        <time>2026-09-28T08:00:18Z</time>
+      </trkpt>
+      <trkpt lat="45.451591" lon="10.283322">
+        <time>2026-09-28T08:00:20Z</time>
+      </trkpt>
+      <trkpt lat="45.451634" lon="10.282828">
+        <time>2026-09-28T08:00:22Z</time>
+      </trkpt>
+      <trkpt lat="45.451651" lon="10.282331">
+        <time>2026-09-28T08:00:24Z</time>
+      </trkpt>
+      <trkpt lat="45.451651" lon="10.281833">
+        <time>2026-09-28T08:00:26Z</time>
+      </trkpt>
+      <trkpt lat="45.451630" lon="10.281335">
+        <time>2026-09-28T08:00:28Z</time>
+      </trkpt>
+      <trkpt lat="45.451609" lon="10.280839">
+        <time>2026-09-28T08:00:30Z</time>
+      </trkpt>
+      <trkpt lat="45.451617" lon="10.280341">
+        <time>2026-09-28T08:00:32Z</time>
+      </trkpt>
+      <trkpt lat="45.451629" lon="10.279843">
+        <time>2026-09-28T08:00:34Z</time>
+      </trkpt>
+      <trkpt lat="45.451642" lon="10.279345">
+        <time>2026-09-28T08:00:36Z</time>
+      </trkpt>
+      <trkpt lat="45.451654" lon="10.278847">
+        <time>2026-09-28T08:00:38Z</time>
+      </trkpt>
+      <trkpt lat="45.451667" lon="10.278349">
+        <time>2026-09-28T08:00:40Z</time>
+      </trkpt>
+      <trkpt lat="45.451691" lon="10.277853">
+        <time>2026-09-28T08:00:42Z</time>
+      </trkpt>
+      <trkpt lat="45.451717" lon="10.277356">
+        <time>2026-09-28T08:00:44Z</time>
+      </trkpt>
+      <trkpt lat="45.451743" lon="10.276859">
+        <time>2026-09-28T08:00:46Z</time>
+      </trkpt>
+      <trkpt lat="45.451719" lon="10.276364">
+        <time>2026-09-28T08:00:48Z</time>
+      </trkpt>
+      <trkpt lat="45.451661" lon="10.275872">
+        <time>2026-09-28T08:00:50Z</time>
+      </trkpt>
+      <trkpt lat="45.451601" lon="10.275381">
+        <time>2026-09-28T08:00:52Z</time>
+      </trkpt>
+      <trkpt lat="45.451538" lon="10.274891">
+        <time>2026-09-28T08:00:54Z</time>
+      </trkpt>
+      <trkpt lat="45.451456" lon="10.274407">
+        <time>2026-09-28T08:00:56Z</time>
+      </trkpt>
+      <trkpt lat="45.451375" lon="10.273922">
+        <time>2026-09-28T08:00:58Z</time>
+      </trkpt>
+      <trkpt lat="45.451295" lon="10.273437">
+        <time>2026-09-28T08:01:00Z</time>
+      </trkpt>
+      <trkpt lat="45.451215" lon="10.272952">
+        <time>2026-09-28T08:01:02Z</time>
+      </trkpt>
+      <trkpt lat="45.451136" lon="10.272467">
+        <time>2026-09-28T08:01:04Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -94,6 +94,12 @@ def load_chains(name):
 RING = load_ring()
 A36 = load_chains("a36.geojson")
 A36_MAIN = max(A36, key=lambda c: c.length_m)
+# Le tratte ASTM (zone-02): la catena principale per percorrenza e coda, e la strada
+# ordinaria parallela piu' vicina trovata da tools/build_freeflow_astm.py (in cache: e'
+# geometria OSM, e non sta in rules/).
+A33 = load_chains("a33.geojson")
+CM = load_chains("corda-molle.geojson")
+PARALLELS = json.loads((ROOT / "tools" / ".cache" / "astm_parallels.json").read_text(encoding="utf-8"))
 
 
 DT = 2.0  # secondi fra un punto e l'altro
@@ -196,6 +202,20 @@ def a36_parallela():
     return walk(off, V_PARALLELA)
 
 
+def main_of(chains):
+    return max(chains, key=lambda c: c.length_m)
+
+
+def percorrenza(chains, speed, length_m):
+    m = main_of(chains)
+    return walk(along(m, 1000.0, 1000.0 + length_m), speed)
+
+
+def parallela(rid):
+    pts = [list(p) for p in PARALLELS[rid]["points"]]
+    return walk(pts, V_PARALLELA)
+
+
 # ------------------------------------------------------------------ scrittura
 
 def write_gpx(path, name, description, track):
@@ -273,32 +293,64 @@ PERCORSI = [
     ("a36-parallela-575m.gpx", "Strada parallela all'A36, 575 m",
      "Costeggia l'autostrada per il tratto parallelo piu' lungo misurato: nessun transito.",
      a36_parallela, "polilinea", "nessuno", V_PARALLELA),
+    # zone-02: tre percorsi per tratta, le stesse soglie. Le code sono di 8 km come quella
+    # dell'A36: il simulatore iOS a 20 km/h consegna circa la meta' della traccia (2057 m su
+    # 3500 per la prima versione di 3,5 km della Corda Molle, che cosi' restava «probabile»).
+    # Il margine lo deve avere il percorso, non la soglia.
+    ("a33-percorrenza.gpx", "A33 Asti-Cuneo a 110 km/h",
+     "Percorrenza normale sul tronco II: transito confermato.",
+     lambda: percorrenza(A33, V_AUTOSTRADA, 8000.0), "a33", "confermato", V_AUTOSTRADA),
+    ("a33-coda.gpx", "A33 Asti-Cuneo in coda a 20 km/h",
+     "In coda per 8 km: confermato via avanzamento.",
+     lambda: percorrenza(A33, V_CODA, 8000.0), "a33", "confermato", V_CODA),
+    ("a33-parallela.gpx", "Strada ordinaria parallela all'A33",
+     "La strada ordinaria allineata piu' vicina all'A33, trovata in OSM: nessun transito.",
+     lambda: parallela("a33"), "a33", "nessuno", V_PARALLELA),
+    ("corda-molle-percorrenza.gpx", "Corda Molle a 110 km/h",
+     "Percorrenza normale del raccordo Ospitaletto-Montichiari: transito confermato.",
+     lambda: percorrenza(CM, V_AUTOSTRADA, 8000.0), "corda-molle", "confermato", V_AUTOSTRADA),
+    ("corda-molle-coda.gpx", "Corda Molle in coda a 20 km/h",
+     "In coda per 8 km: confermato via avanzamento.",
+     lambda: percorrenza(CM, V_CODA, 8000.0), "corda-molle", "confermato", V_CODA),
+    ("corda-molle-parallela.gpx", "Strada ordinaria parallela alla Corda Molle",
+     "La strada ordinaria allineata piu' vicina al raccordo, trovata in OSM: nessun transito.",
+     lambda: parallela("corda-molle"), "corda-molle", "nessuno", V_PARALLELA),
 ]
 
-OUT.mkdir(parents=True, exist_ok=True)
-print("== generazione ==")
-for filename, name, desc, build, kind, atteso, velocita in PERCORSI:
-    track = build()
-    write_gpx(OUT / filename, name, desc, track)
-    print(f"  {filename}: {len(track)} punti")
+def main():
+    OUT.mkdir(parents=True, exist_ok=True)
+    print("== generazione ==")
+    for filename, name, desc, build, kind, atteso, velocita in PERCORSI:
+        track = build()
+        write_gpx(OUT / filename, name, desc, track)
+        print(f"  {filename}: {len(track)} punti")
 
-print("\n== rilettura e verifica ==")
-for filename, name, desc, build, kind, atteso, velocita in PERCORSI:
-    track = read_gpx(OUT / filename)
-    check(f"{filename}: tutti i punti hanno un orario", len(track) > 1, f"{len(track)} punti")
+    print("\n== rilettura e verifica ==")
+    for filename, name, desc, build, kind, atteso, velocita in PERCORSI:
+        track = read_gpx(OUT / filename)
+        check(f"{filename}: tutti i punti hanno un orario", len(track) > 1, f"{len(track)} punti")
 
-    v = measured_speed_kmh(track)
-    tolleranza = 0.05 * velocita
-    check(f"{filename}: velocita' letta {v:.0f} km/h vicino a {velocita:.0f}",
-          abs(v - velocita) <= tolleranza, f"scarto {abs(v - velocita):.1f} km/h")
+        v = measured_speed_kmh(track)
+        tolleranza = 0.05 * velocita
+        check(f"{filename}: velocita' letta {v:.0f} km/h vicino a {velocita:.0f}",
+              abs(v - velocita) <= tolleranza, f"scarto {abs(v - velocita):.1f} km/h")
 
-    if kind == "poligono":
-        esito, _, why = ac.classify_trip(track, RING)
-    else:
-        esito, why = detect(track, A36)
-    check(f"{filename}: esito {esito}", esito == atteso, f"atteso {atteso} - {why}")
+        if kind == "poligono":
+            esito, _, why = ac.classify_trip(track, RING)
+        elif kind == "a33":
+            esito, why = detect(track, A33)
+        elif kind == "corda-molle":
+            esito, why = detect(track, CM)
+        else:
+            esito, why = detect(track, A36)
+        check(f"{filename}: esito {esito}", esito == atteso, f"atteso {atteso} - {why}")
 
-if fails:
-    print(f"\n!! {len(fails)} verifiche fallite: {fails}")
-    sys.exit(1)
-print(f"\n{len(PERCORSI)} percorsi scritti in tools/gpx/")
+    if fails:
+        print(f"\n!! {len(fails)} verifiche fallite: {fails}")
+        sys.exit(1)
+    print(f"\n{len(PERCORSI)} percorsi scritti in tools/gpx/")
+
+
+# Solo lanciato: build_gpx_route.py importa di qui walk, write_gpx e read_gpx.
+if __name__ == "__main__":
+    main()
