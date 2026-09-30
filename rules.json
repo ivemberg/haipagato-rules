@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "version": 3,
-  "updatedAt": "2026-09-27",
+  "version": 4,
+  "updatedAt": "2026-09-30",
   "zones": [
     {
       "id": "area-c",
@@ -359,8 +359,8 @@
       "operator": "asti-cuneo",
       "enabled": true,
       "coverageNotice": {
-        "it": "Il tratto nuovo fra Roddi e Alba non è ancora coperto dal rilevamento: se percorri solo quello, l'app non registra il passaggio. Controlla sul sito Asti-Cuneo se c'è da pagare e, nel caso, aggiungi il passaggio a mano.",
-        "en": "The new section between Roddi and Alba is not yet covered by detection: if you drive only on it, the app does not record the passage. Check on the Asti-Cuneo website whether you need to pay and, if so, add the passage by hand."
+        "it": "Il tratto nuovo fra Roddi e Alba non è ancora coperto dal rilevamento: se percorri solo quello, l'app non registra il passaggio. Il tratto fra Asti e Isola d'Asti, invece, per gli spostamenti locali è gratuito (Asti-Cuneo, 30 aprile 2026): se hai fatto solo quello, l'app può ricordarti un pedaggio che non devi. In tutti e due i casi controlla sul sito Asti-Cuneo se c'è da pagare; per Roddi–Alba, se serve, aggiungi il passaggio a mano.",
+        "en": "The new section between Roddi and Alba is not yet covered by detection: if you drive only on it, the app does not record the passage. The section between Asti and Isola d'Asti, on the other hand, is free for local trips (Asti-Cuneo, 30 April 2026): if you drove only on it, the app may remind you of a toll you do not owe. In both cases, check on the Asti-Cuneo website whether you need to pay; for Roddi–Alba, add the passage by hand if needed."
       },
       "geometry": {
         "type": "polyline",
@@ -585,7 +585,7 @@
   "holidays": {
     "verified": false,
     "note": "Le fonti ufficiali di Area C dicono solo \"festivi esclusi\" senza elencare i giorni. Questo elenco è ricostruito dalle festività civili italiane (L. 260/1963) più il patrono di Milano (Sant'Ambrogio, 7 dicembre). Non confermato da fonte Area C: rischio accettato in M0, perché un festivo mancante produce al più un promemoria superfluo. Correggibile senza pubblicare una nuova versione dell'app tramite l'aggiornamento remoto di questo file.",
-    "source": "https://www.comune.milano.it/aree-tematiche/mobilita/area-c",
+    "source": "https://www.comune.milano.it/argomenti/mobilita/area-c",
     "dates": [
       {
         "date": "2026-11-01",

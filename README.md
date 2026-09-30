@@ -92,6 +92,18 @@ stessa cosa: esce con 0 finché il lotto non è un'autostrada in OSM e l'avviso 
 la geometria lo copre e l'avviso non c'è più); con 1 e le istruzioni quando qualcosa non torna; con
 2 se Overpass non risponde.
 
+## Le ferrovie accanto alle autostrade (`railParallel`)
+
+Proprietà facoltativa delle feature `LineString` delle free flow: `"railParallel": [[da, a], ...]`,
+in metri lungo la catena (come l'avanzamento del rilevatore), dove una ferrovia OSM corre entro la
+tolleranza della zona (40 m) e allineata (30°) per almeno 200 m, con 100 m di margine per parte.
+Un passaggio tutto dentro quei metri, con il veicolo riconosciuto solo dalla velocità GPS e non dal
+moto, resta **probabile**: potrebbe essere un treno. La scrive `tools/mark_rail_parallel.py` del
+repo dell'app (binari da OpenStreetMap, ODbL come il resto del file), da rilanciare dopo gli script
+che rigenerano i GeoJSON. Al 2026-09-29 c'è solo in `a33.geojson`, lungo la Ferrovia
+Asti–Castagnole delle Lanze (circa 2 km); **non è verificato se su quella linea circolino treni**.
+Un'app che non conosce la proprietà la ignora.
+
 ## Fonti e verifiche
 
 Ogni valore dei file di questa cartella è tracciato in [`SOURCES.md`](SOURCES.md) con URL, citazione

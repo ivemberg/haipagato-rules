@@ -476,6 +476,19 @@ Consultate il 2026-09-27. Piano e decisioni in `docs/plans/zone-02-a33-cordamoll
   dispositivi di telepedaggio potranno pagare entro 15 giorni dall'avvenuto passaggio».
 - **Pagamento**: piattaforma https://a33ffpagaonline.astmservice.it/freeflow/ e app «FreeFlow A33», dalla
   stessa pagina.
+- **Comunicato del 30/04/2026** (consultato il 2026-09-30),
+  https://www.asticuneo.it/a33-asti-cuneo-al-via-il-4-maggio-il-pedaggiamento-della-tratta-cherasco-roddi/
+  (PDF `wp-content/uploads/2026/04/CS-Asti-Cuneo-Free-Flow-2.pdf`): dal 4 maggio 2026 Free Flow anche
+  su Cherasco–Roddi, portali 6 e 7, sette varchi attivi; «La tangenziale di Alba e il tratto
+  Asti–Isola d'Asti rimarranno gratuiti per gli spostamenti locali», e l'accesso all'ospedale di Verduno
+  (portale «H»). **Non verificato**: quali uscite delimitino il tratto gratuito e che cosa conti come
+  «spostamento locale». Per questo l'app non lo esclude dal rilevamento: lo dice nel `coverageNotice`
+  dell'A33 (versione 4), e l'utente controlla sul sito prima di pagare. La tangenziale di Alba
+  (SS231) non è nella geometria e non cambia niente.
+- **Superato: comunicato del 10/10/2024** («dal 14 ottobre sospensione del pedaggio tra Roddi e Alba
+  Ovest», portali 6 e H disattivati «fino al completamento funzionale» del segmento Roddi–Alba
+  Ovest–Cherasco). Il completamento è del 30/12/2025 e il pedaggio sui portali 6 e 7 è ripartito il
+  4 maggio 2026 (comunicato qui sopra): la sospensione non vale più.
 
 ### Corda Molle — Autovia Padana (gruppo ASTM)
 
