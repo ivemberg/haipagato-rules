@@ -551,7 +551,6 @@ Solo informativo, solo autovetture per trasporto persone (M1) benzina e diesel.
   dei **residenti** in Area C (diverso, stesso capitolo); le moto (la pagina italiana dell'Area B dice «Dal
   1° ottobre 2026» per le moto Euro 2-3, quella inglese «1 October 2027»: una discordanza fra le due
   traduzioni, che l'app non deve risolvere). Per questi casi la scheda mostra solo il link al Comune.
-- **Move-In**: https://www.movein.regione.lombardia.it/, solo come link.
 - **Indirizzi**: nel 2026 il Comune ha spostato le pagine da `/aree-tematiche/mobilita/…` a
   `/argomenti/mobilita/…`; i vecchi indirizzi portano alla home. Corretti in `rules.json` e nella
   schermata Informazioni.

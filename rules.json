@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "version": 4,
-  "updatedAt": "2026-09-30",
+  "version": 5,
+  "updatedAt": "2026-10-02",
   "zones": [
     {
       "id": "area-c",
@@ -659,7 +659,6 @@
   },
   "vehicleRestrictions": {
     "note": "Solo informativo: nessuna geometria e nessun rilevamento. Solo autovetture per trasporto persone (M1) benzina e diesel, le uniche per cui le fonti danno una regola che l'app sa leggere senza interpretarla; per le altre alimentazioni, per i residenti in Area C e per le moto la scheda mostra solo il link al Comune. Un divieto con from null è già in vigore.",
-    "moveInUrl": "https://www.movein.regione.lombardia.it/",
     "areas": [
       {
         "id": "area-b",
