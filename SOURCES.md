@@ -51,11 +51,13 @@ di cambiare: è il motivo principale per cui serve l'aggiornamento remoto di `ru
 **Nessuna fonte ufficiale di Area C elenca i giorni festivi.** Tutte dicono solo «festivi esclusi».
 Il Disciplinare del 13/03/2026 non contiene la parola «festivi» né alcun calendario di sospensioni.
 
-L'elenco in `rules.json` è **ricostruito**, non verificato:
-festività civili italiane (L. 260/1963) + Sant'Ambrogio (7 dicembre), patrono di Milano.
+L'elenco in `rules.json` è **ricostruito**, non verificato: festività civili italiane (L. 260/1963).
 
-Sant'Ambrogio come giorno di sospensione è confermato solo da fonti secondarie
-(es. [MilanoToday](https://www.milanotoday.it/cronaca/areac-chiusa-7-dicembre-2012.html)), mai da comune.milano.it.
+**Sant'Ambrogio (7 dicembre) tolto dalla versione 6 (2026-11-24), per scelta di Ivo.** Come giorno di
+sospensione era confermato solo da fonti secondarie (es.
+[MilanoToday](https://www.milanotoday.it/cronaca/areac-chiusa-7-dicembre-2012.html), del 2012), mai da
+comune.milano.it né da MyAreaC (ricontrollati il 2026-11-24: solo «festivi esclusi»). Nel dubbio l'app
+manda il promemoria: un promemoria superfluo costa meno di un ingresso non pagato.
 
 ### Domanda aperta: sospensione estiva di agosto
 
@@ -501,8 +503,12 @@ Consultate il 2026-09-27. Piano e decisioni in `docs/plans/zone-02-a33-cordamoll
   «il pagamento potrà essere regolarizzato entro 15 giorni dal passaggio».
 - **Pagamento**: piattaforma https://a21ffpagaonline.astmservice.it/freeflow e app «FreeFlow A21»
   (https://www.autoviapadana.it/il-sistema-free-flow/). Attivo dal 1 marzo 2026.
-- **Residenti**: esenti i residenti dei 22 comuni del raccordo fino al 28/02/2027, al 50% i residenti a
-  Brescia, **solo** con telepedaggio o Conto Targa (comunicato del 16/02/2026).
+- **Residenti** (aggiornato il 2026-11-24, versione 6): l'esenzione totale annunciata il 16/02/2026 è
+  durata solo fino al 30/04/2026. Dal 1° maggio 2026 i residenti di Brescia e dei 22 comuni del raccordo
+  pagano il 50%, se registrati e **solo** con telepedaggio o Conto Targa; solo persone fisiche
+  (https://www.autoviapadana.it/scontistiche-e-agevolazioni/ e comunicato del 28/04/2026,
+  https://www.autoviapadana.it/raccordo-autostradale-ospitaletto-montichiari-corda-molle-aggiornamento-sulle-agevolazioni-tariffarie-dal-1-maggio-2026/).
+  Per l'app non cambia niente: chi ha telepedaggio o Conto Targa paga già in automatico.
 
 ### Scadenza: 14 giorni dopo il giorno del passaggio (lettura prudente)
 

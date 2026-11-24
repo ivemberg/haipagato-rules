@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "version": 5,
-  "updatedAt": "2026-10-02",
+  "version": 6,
+  "updatedAt": "2026-11-24",
   "zones": [
     {
       "id": "area-c",
@@ -539,8 +539,8 @@
       "verified": true,
       "exemptions": {
         "verified": true,
-        "source": "https://www.autoviapadana.it/wp-content/uploads/2026/02/2026.02.16_PedaggiamentoCordaMolle_FINALE.pdf",
-        "note": "Residenti dei 22 comuni del raccordo esenti fino al 28/02/2027 (classi 1 e 2), residenti a Brescia al 50%: solo con telepedaggio o Conto Targa, cioè chi paga già in automatico e ha acceso «Telepass o simili». Nessuna esenzione automatica utile all'app.",
+        "source": "https://www.autoviapadana.it/scontistiche-e-agevolazioni/",
+        "note": "Dal 1° maggio 2026 i residenti di Brescia e dei 22 comuni del raccordo pagano il 50% (classi 1 e 2, solo persone fisiche), se registrati sul sito di Autovia Padana e solo con telepedaggio o Conto Targa, cioè chi paga già in automatico e ha acceso «Telepass o simili». L'esenzione totale dei primi due mesi è finita il 30 aprile 2026 (comunicato del 28/04/2026). Nessuna esenzione automatica utile all'app.",
         "automatic": [],
         "requiresPlateRegistration": [],
         "reducedFare": []
@@ -584,16 +584,12 @@
   ],
   "holidays": {
     "verified": false,
-    "note": "Le fonti ufficiali di Area C dicono solo \"festivi esclusi\" senza elencare i giorni. Questo elenco è ricostruito dalle festività civili italiane (L. 260/1963) più il patrono di Milano (Sant'Ambrogio, 7 dicembre). Non confermato da fonte Area C: rischio accettato in M0, perché un festivo mancante produce al più un promemoria superfluo. Correggibile senza pubblicare una nuova versione dell'app tramite l'aggiornamento remoto di questo file.",
+    "note": "Le fonti ufficiali di Area C dicono solo \"festivi esclusi\" senza elencare i giorni. Questo elenco è ricostruito dalle festività civili italiane (L. 260/1963). Sant'Ambrogio (7 dicembre, patrono di Milano) è stato tolto il 2026-11-24 per scelta di Ivo: nessuna fonte del Comune o di ATM dice che quel giorno Area C sia spenta, e un promemoria superfluo costa meno di un ingresso non pagato. Non confermato da fonte Area C: rischio accettato in M0, perché un festivo mancante produce al più un promemoria superfluo. Correggibile senza pubblicare una nuova versione dell'app tramite l'aggiornamento remoto di questo file.",
     "source": "https://www.comune.milano.it/argomenti/mobilita/area-c",
     "dates": [
       {
         "date": "2026-11-01",
         "name": "Ognissanti"
-      },
-      {
-        "date": "2026-12-07",
-        "name": "Sant'Ambrogio"
       },
       {
         "date": "2026-12-08",
@@ -638,10 +634,6 @@
       {
         "date": "2027-11-01",
         "name": "Ognissanti"
-      },
-      {
-        "date": "2027-12-07",
-        "name": "Sant'Ambrogio"
       },
       {
         "date": "2027-12-08",
